@@ -1,1262 +1,453 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma de Inglês com IA</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>REGHUB AI</title>
     <style>
-        /* Estilos Globais e Animações */
-        body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        .animate-spin { animation: spin 1s linear infinite; }
-        @keyframes fade-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
-        @keyframes fade-in-backdrop { from { opacity: 0; } to { opacity: 1; } }
-        .animate-fade-in-backdrop { animation: fade-in-backdrop 0.3s ease-out forwards; }
-
-        /* Navegação Principal Aprimorada */
-        .main-nav-btn { 
-            @apply px-4 py-2 font-semibold text-gray-600 rounded-md transition-all duration-300 relative border-b-2 border-transparent;
-        }
-        .main-nav-btn:not(.active):hover { 
-            @apply bg-gray-100 text-indigo-600;
-        }
-        .main-nav-btn.active { 
-            @apply bg-indigo-600 text-white shadow-md border-indigo-700;
+        /* --- PALETA DE CORES OFICIAL VINCI AIRPORTS (Extraída do PDF) --- */
+        :root {
+            /* Cores Principais */
+            --vinci-bleu-fonce: #052145;  /* Header, Textos Fortes */
+            --vinci-bleu-clair: #52C1DD;  /* Acentos, Botões Secundários */
+            --vinci-violet: #752969;      /* Botão Chatbot */
+            --vinci-rose: #FA527D;        /* Botão Indicadores */
+            --vinci-vert: #009669;        /* Botão Autoinspeção, Sucesso */
+            --vinci-jaune: #E8E100;       /* Detalhes, Alertas */
+            
+            /* Cores Neutras e Logo */
+            --vinci-blanc: #FFFFFF;
+            --vinci-gris: #E6E6E6;        /* Fundo Geral */
+            --vinci-noir: #000000;
+            --vinci-bleu-logo: #004489;   /* Botão Auditoria */
+            --vinci-rouge-logo: #E20025;  /* Erros, Atenção Crítica */
         }
 
-        /* Views e Transições */
-        .view-hidden { display: none; }
-        .view-container { transition: opacity 0.3s ease-in-out; }
-
-        /* Botões e Inputs Melhorados */
-        .btn { @apply font-bold py-2 px-4 rounded-lg transition-all duration-200 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transform hover:scale-105 active:scale-100; }
-        .custom-select { @apply appearance-none w-full bg-white py-3 px-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 shadow-sm transition-all duration-200; }
-
-        /* Chat de Conversação Moderno */
-        #chat-history::-webkit-scrollbar { width: 6px; }
-        #chat-history::-webkit-scrollbar-track { background: #f1f5f9; }
-        #chat-history::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
-        .mic-active { background-color: #ef4444 !important; color: white; }
-        .ia-bubble { @apply bg-gray-200 text-gray-800 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl; }
-        .user-bubble { @apply bg-indigo-600 text-white rounded-tl-2xl rounded-bl-2xl rounded-br-2xl; }
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #cdcdcd; 
+            min-height: 100%;
+            color: var(--vinci-bleu-fonce);
+        }
         
-        /* Estilos Flashcards e Quiz */
-        #flashcard { perspective: 1000px; }
-        #flashcard-inner { transition: transform 0.6s; transform-style: preserve-3d; }
-        #flashcard.flipped #flashcard-inner { transform: rotateY(180deg); }
-        .flashcard-face { backface-visibility: hidden; }
-        .tts-button { @apply text-gray-400 hover:text-indigo-600 transition-colors duration-200; }
-        .tts-button.playing { @apply text-orange-500; }
-        .quiz-option-btn { @apply block w-full text-left p-4 border rounded-lg transition-colors duration-200; }
-        .quiz-option-btn:not(:disabled) { @apply hover:bg-indigo-100; }
-        .quiz-option-btn.correct { @apply bg-green-500 text-white border-green-600; }
-        .quiz-option-btn.incorrect { @apply bg-red-500 text-white border-red-600; }
-
-        /* Tooltip */
-        [data-tooltip] { position: relative; }
-        [data-tooltip]:before {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: 125%;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: #374151;
-            color: white;
-            padding: 4px 8px;
+        html {
+            height: 100%;
+        }
+        
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--vinci-gris);
+            min-height: 100vh;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        
+        .header {
+            background: var(--vinci-bleu-fonce);
+            color: var(--vinci-blanc);
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 5px solid var(--vinci-bleu-clair);
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 13px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .main-content {
+            padding: 20px;
+            padding-bottom: 100px;
+        }
+        
+        .menu-item {
+            background: var(--vinci-blanc);
             border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s, visibility 0.2s;
+            margin-bottom: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border-left: 5px solid transparent;
         }
-        [data-tooltip]:hover:before {
-            opacity: 1;
-            visibility: visible;
+        
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
+        
+        .menu-button {
+            width: 100%;
+            padding: 20px;
+            border: none;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            font-size: 16px;
+            color: var(--vinci-bleu-fonce);
+            font-weight: 700;
+        }
+        
+        .menu-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 24px;
+            color: var(--vinci-blanc);
+        }
+        
+        .item-auditoria { border-left-color: var(--vinci-bleu-logo); }
+        .icon-auditoria { background-color: var(--vinci-bleu-logo); }
+        
+        .item-chatbot { border-left-color: var(--vinci-violet); }
+        .icon-chatbot { background-color: var(--vinci-violet); }
+        
+        .item-treinamento { border-left-color: var(--vinci-bleu-clair); }
+        .icon-treinamento { background-color: var(--vinci-bleu-clair); }
+        
+        .item-inspecao { border-left-color: var(--vinci-vert); }
+        .icon-inspecao { background-color: var(--vinci-vert); }
+        
+        .item-indicadores { border-left-color: var(--vinci-rose); }
+        .icon-indicadores { background-color: var(--vinci-rose); }
+        
+        .menu-text { flex: 1; }
+        .menu-title { font-weight: 800; margin-bottom: 4px; display: block; }
+        .menu-description { font-size: 11px; color: #666; line-height: 1.3; font-weight: 400; display: block;}
+        .arrow { color: #ccc; font-size: 18px; font-weight: bold; }
+        
+        /* Modais */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 33, 69, 0.7); z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-content { background: var(--vinci-gris); margin: 15% auto; padding: 0; width: 90%; max-width: 400px; border-radius: 6px; max-height: 85%; overflow-y: auto; animation: slide-up 0.3s ease-out; box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+        @keyframes slide-up { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
-        /* Modal */
-        .modal-backdrop {
-            @apply fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50;
+        .modal-header { background: var(--vinci-bleu-fonce); color: var(--vinci-blanc); padding: 18px 20px; border-radius: 6px 6px 0 0; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid var(--vinci-bleu-clair); }
+        .modal-title { font-size: 18px; font-weight: 700; }
+        .close-btn { background: none; border: none; color: var(--vinci-blanc); font-size: 28px; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; line-height: 1; }
+        .modal-body { padding: 20px; }
+        .sub-menu { display: flex; flex-direction: column; gap: 10px; }
+        
+        .sub-button { 
+            background: var(--vinci-bleu-logo); 
+            color: white; 
+            border: none; 
+            padding: 16px 20px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 14px; 
+            font-weight: 600; 
+            transition: transform 0.2s, background-color 0.2s; 
+            text-align: left; 
+            border-left: 4px solid var(--vinci-bleu-clair);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
-        .modal-content {
-            @apply bg-white rounded-lg shadow-2xl p-6 sm:p-8 w-11/12 max-w-2xl max-h-[90vh] overflow-y-auto;
-        }
+        .sub-button:hover { transform: translateY(-1px); background: var(--vinci-bleu-fonce); }
+        
+        .sub-button.secondary { background: var(--vinci-bleu-clair); border-left: 4px solid var(--vinci-blanc); color: var(--vinci-bleu-fonce); }
+        .sub-button.secondary:hover { background: #3dbbd9; }
+        
+        .sub-button.tertiary { background: transparent; color: #666; border: 1px solid #ccc; border-left: 1px solid #ccc; text-align: center; box-shadow: none; font-weight: 500;}
+        .sub-button.tertiary:hover { background: #e0e0e0; color: var(--vinci-bleu-fonce); }
+        
+        .agent-grid { display: grid; grid-template-columns: 1fr; gap: 10px; }
+        .agent-card { background: var(--vinci-blanc); border: 1px solid #ddd; border-radius: 4px; padding: 15px; cursor: pointer; transition: all 0.2s; text-align: center; border-top: 3px solid transparent; }
+        .agent-card:hover { border-color: #ddd; border-top-color: var(--vinci-violet); background: #f9f9f9; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .agent-name { font-weight: 700; margin-bottom: 5px; color: var(--vinci-bleu-fonce); }
+        .agent-desc { font-size: 11px; color: #666; }
+        
+        .process-flow { background: var(--vinci-blanc); border-radius: 4px; padding: 15px; margin: 15px 0; border: 1px solid #ddd; border-left: 4px solid var(--vinci-jaune); }
+        .flow-step { display: flex; align-items: center; margin-bottom: 10px; font-size: 13px; color: var(--vinci-bleu-fonce); }
+        .step-number { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); min-width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-size: 12px; font-weight: 800; }
+        
+        /* Chat Interface */
+        .chat-interface { display: none; height: 400px; border: 1px solid #ccc; border-radius: 4px; margin-top: 15px; flex-direction: column; background: var(--vinci-blanc); overflow: hidden; }
+        .chat-interface.active { display: flex; }
+        .chat-header { background: var(--vinci-violet); color: white; padding: 12px 15px; font-weight: 700; font-size: 14px; }
+        .chat-messages { flex-grow: 1; overflow-y: auto; padding: 15px; background: #f4f4f4; }
+        .chat-input-area { display: flex; padding: 10px; border-top: 1px solid #ddd; background: var(--vinci-blanc); }
+        .chat-input { flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 20px; outline: none; font-size: 14px; color: var(--vinci-bleu-fonce); }
+        .send-btn { background: var(--vinci-violet); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-left: 10px; cursor: pointer; font-size: 13px; font-weight: 600; }
+        
+        .message { margin-bottom: 10px; padding: 10px 14px; border-radius: 8px; max-width: 80%; word-wrap: break-word; font-size: 13px; }
+        .user-message { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); margin-left: auto; border-bottom-right-radius: 0; font-weight: 500; }
+        .bot-message { background: var(--vinci-blanc); border: 1px solid #ddd; color: var(--vinci-bleu-fonce); border-bottom-left-radius: 0; }
+        .typing-indicator { font-style: italic; color: #999; font-size: 12px; }
+        
+        .status-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
+        .status-active { background: var(--vinci-vert); }
+        
+        .hidden { display: none; }
+        .loader { text-align: center; padding: 20px; font-style: italic; color: #666; font-size: 13px; }
+        
+        .result-card { background: var(--vinci-blanc); border-left: 4px solid var(--vinci-vert); padding: 15px; margin-top: 15px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-size: 13px; color: var(--vinci-bleu-fonce); }
+        .result-card.warning { border-left-color: var(--vinci-rouge-logo); background: #fff5f5; }
+        
+        .item-list .list-item { display: flex; flex-direction: column; padding: 14px; border-bottom: 1px solid #eee; background: var(--vinci-blanc); font-size: 13px; transition: 0.2s; }
+        .item-list .list-item .collab-name { font-weight: 800; color: var(--vinci-bleu-fonce); margin-bottom: 4px; }
+        .item-list .list-item .course-status { font-size: 11px; color: #555; display: flex; align-items: center; justify-content: space-between; }
+        .item-list .list-item .expiry-tag { font-weight: 700; color: var(--vinci-rouge-logo); }
+
+        .checklist-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #eee; }
+        .checklist-item:last-child { border-bottom: none; }
+        .checklist-item:nth-child(odd) { background-color: #f8f8f8; }
+        .checklist-item input { margin-right: 12px; accent-color: var(--vinci-vert); width: 16px; height: 16px;}
+        .checklist-item label { font-size: 13px; color: var(--vinci-bleu-fonce); cursor: pointer; font-weight: 500; }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
-    <!-- Header Fixo -->
-    <header class="bg-white shadow-sm sticky top-0 z-10">
-        <div class="container mx-auto p-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold text-indigo-700">🇬🇧 IA Professor de Inglês</h1>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">REGHUB AI</div>
+            <div class="subtitle">Sistema inteligente de garantia regulatória</div>
         </div>
-    </header>
-
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
-        <!-- Navegação Principal (Abas) -->
-        <div class="mb-8 flex justify-center bg-white p-2 rounded-lg shadow-md">
-            <nav class="flex flex-wrap justify-center space-x-2">
-                <button id="nav-lessons" class="main-nav-btn active">📚 Lições</button>
-                <button id="nav-conversation" class="main-nav-btn">🗣️ Conversação</button>
-                <button id="nav-flashcards" class="main-nav-btn">🃏 Flashcards</button>
-                <button id="nav-quiz" class="main-nav-btn">🧠 Quiz</button>
-            </nav>
-        </div>
-
-        <!-- Container para as Views -->
-        <div id="views-container" class="view-container">
-
-            <!-- View: Lições -->
-            <div id="lessons-view">
-                <div class="bg-white rounded-lg shadow-md p-4 mb-8 space-y-4">
-                    <div class="flex items-center gap-4">
-                        <label for="level-select" class="font-semibold text-gray-700">Seu Nível:</label>
-                        <div class="relative w-full max-w-xs">
-                            <select id="level-select" class="custom-select block w-full">
-                                <option value="A1">A1</option><option value="A2">A2</option><option value="B1" selected>B1</option><option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
+        
+        <div class="main-content">
+            <div class="menu-item item-auditoria">
+                <button class="menu-button" onclick="openModal('auditModal')">
+                    <div class="menu-icon icon-auditoria">📋</div>
+                    <div class="menu-text">
+                        <span class="menu-title">Auditoria</span>
+                        <span class="menu-description">Requisitos legais, simulações e fiscalizações</span>
                     </div>
-                    <nav>
-                        <ul class="flex flex-col sm:flex-row justify-around space-y-2 sm:space-y-0 sm:space-x-2">
-                            <li><button data-section="Gramática" class="lesson-nav-btn w-full text-center px-4 py-3 rounded-md font-semibold text-gray-700 bg-gray-100 hover:bg-indigo-100">Gramática</button></li>
-                            <li><button data-section="Vocabulário" class="lesson-nav-btn w-full text-center px-4 py-3 rounded-md font-semibold text-gray-700 bg-gray-100 hover:bg-indigo-100">Vocabulário</button></li>
-                            <li><button data-section="Pronúncia" class="lesson-nav-btn w-full text-center px-4 py-3 rounded-md font-semibold text-gray-700 bg-gray-100 hover:bg-indigo-100">Pronúncia</button></li>
-                            <li><button data-section="Conversação" class="lesson-nav-btn w-full text-center px-4 py-3 rounded-md font-semibold text-gray-700 bg-gray-100 hover:bg-indigo-100">Conversação</button></li>
-                        </ul>
-                    </nav>
-                </div>
-                <main id="lesson-content-area" class="bg-white rounded-lg shadow-md min-h-[400px]">
-                    <div id="lesson-content" class="p-6 sm:p-8 text-center flex items-center justify-center h-full">
-                        <p class="text-gray-400 text-lg">Selecione uma categoria para começar a sua jornada.</p>
-                    </div>
-                </main>
+                    <div class="arrow">›</div>
+                </button>
             </div>
-
-            <!-- View: Conversação -->
-            <div id="conversation-view" class="view-hidden">
-                <div id="config-panel" class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-center mb-6">
-                        <h2 class="text-xl font-semibold">👋 Olá! Vamos praticar?</h2>
-                        <p class="text-gray-600 mt-1">Escolha um tema para simular um diálogo com a IA.</p>
+            
+            <div class="menu-item item-chatbot">
+                <button class="menu-button" onclick="openModal('chatModal')">
+                    <div class="menu-icon icon-chatbot">🤖</div>
+                    <div class="menu-text">
+                        <span class="menu-title">Chatbot</span>
+                        <span class="menu-description">Agentes MAPA, Anvisa e RFB especializados</span>
                     </div>
-                    <div class="space-y-4">
-                        <div>
-                            <label for="convo-level-select" class="block text-sm font-medium text-gray-700 mb-1">Nível da Conversa</label>
-                            <div class="relative w-full">
-                                <select id="convo-level-select" class="custom-select w-full">
-                                    <option value="A1">A1</option><option value="A2">A2</option><option value="B1" selected>B1</option><option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <label for="convo-theme-select" class="block text-sm font-medium text-gray-700 mb-1">Tema do Diálogo</label>
-                            <div class="relative w-full">
-                                <select id="convo-theme-select" class="custom-select w-full"></select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                        </div>
-                        <button id="btn-start-convo" class="w-full btn bg-indigo-600 text-white hover:bg-indigo-700">Iniciar Conversa</button>
-                    </div>
-                </div>
-                <div id="conversation-area" class="hidden mt-8">
-                    <div class="bg-white rounded-lg shadow-md">
-                        <div id="chat-history" class="h-96 p-4 overflow-y-auto space-y-4"></div>
-                        <div class="p-4 border-t border-gray-200">
-                            <div class="flex items-center gap-2">
-                                <input type="text" id="user-input" class="flex-grow p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" placeholder="Digite ou fale...">
-                                <button id="btn-mic" class="p-3 rounded-lg bg-gray-200 hover:bg-gray-300" data-tooltip="Usar microfone">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
-                                </button>
-                                <button id="btn-send-convo" class="btn bg-indigo-600 text-white">Enviar</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mt-4 flex justify-between items-center">
-                        <button id="btn-analyze-convo" class="btn bg-teal-500 text-white">✨ Analisar Conversa</button>
-                        <button id="btn-new-dialogue" class="btn bg-gray-500 text-white">🔁 Novo Diálogo</button>
-                    </div>
-                </div>
+                    <div class="arrow">›</div>
+                </button>
             </div>
-
-            <!-- View: Flashcards -->
-            <div id="flashcards-view" class="view-hidden">
-                <div class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-                        <h2 class="text-2xl font-bold text-gray-800 mb-4 sm:mb-0">Prática com Flashcards</h2>
-                        <div class="flex items-center gap-4">
-                            <label for="flashcard-level-select" class="font-semibold text-gray-700">Nível:</label>
-                            <div class="relative">
-                                <select id="flashcard-level-select" class="custom-select">
-                                    <option value="A1">A1</option><option value="A2">A2</option><option value="B1" selected>B1</option>
-                                    <option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option>
-                                </select>
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                                </div>
-                            </div>
-                            <button id="btn-generate-deck" class="btn bg-indigo-600 text-white">Gerar Baralho</button>
-                        </div>
+            
+            <div class="menu-item item-treinamento">
+                <button class="menu-button" onclick="openModal('trainingModal')">
+                    <div class="menu-icon icon-treinamento">🎓</div>
+                    <div class="menu-text">
+                        <span class="menu-title">Treinamento</span>
+                        <span class="menu-description">Diagnóstico de reciclagem e inscrições</span>
                     </div>
-
-                    <div id="flashcard" class="w-full h-64 cursor-pointer mb-6">
-                        <div id="flashcard-inner" class="relative w-full h-full">
-                            <div id="flashcard-front" class="flashcard-face absolute w-full h-full bg-indigo-500 text-white rounded-xl shadow-lg flex flex-col items-center justify-center p-6">
-                                <p class="text-lg text-indigo-200">Selecione um nível e clique em "Gerar Baralho" para começar.</p>
-                            </div>
-                            <div id="flashcard-back" class="flashcard-face absolute w-full h-full bg-gray-700 text-white rounded-xl shadow-lg flex flex-col items-center justify-center p-6" style="transform: rotateY(180deg);"></div>
-                        </div>
-                    </div>
-                    
-                    <div id="flashcard-controls" class="hidden">
-                        <div class="flex justify-center items-center gap-4 mb-4">
-                            <button id="flashcard-prev" class="btn bg-gray-200 text-gray-800">⬅ Anterior</button>
-                            <p id="flashcard-progress" class="font-semibold text-gray-600"></p>
-                            <button id="flashcard-next" class="btn bg-gray-200 text-gray-800">Próximo ➡</button>
-                        </div>
-                        <div class="flex justify-center items-center gap-4 border-t pt-4 mt-4">
-                            <button id="flashcard-wrong" class="btn bg-red-500 text-white w-24">❌ Errei</button>
-                            <button id="flashcard-flip" class="btn bg-blue-500 text-white">🔄 Virar</button>
-                            <button id="flashcard-correct" class="btn bg-green-500 text-white w-24">✅ Acertei</button>
-                        </div>
-                    </div>
-                </div>
+                    <div class="arrow">›</div>
+                </button>
             </div>
-
-            <!-- View: Quiz -->
-            <div id="quiz-view" class="view-hidden">
-                <div id="quiz-config-panel" class="bg-white p-6 rounded-lg shadow-md">
-                    <div class="text-center mb-6">
-                        <h2 class="text-xl font-semibold">Teste os seus conhecimentos!</h2>
-                        <p class="text-gray-600 mt-1">Escolha um nível para gerar um quiz com 7 perguntas aleatórias.</p>
+            
+            <div class="menu-item item-inspecao">
+                <button class="menu-button" onclick="openModal('inspectionModal')">
+                    <div class="menu-icon icon-inspecao">🔍</div>
+                    <div class="menu-text">
+                        <span class="menu-title">Autoinspeção</span>
+                        <span class="menu-description">Rondas diárias e blitz programadas</span>
                     </div>
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-                        <div class="relative w-full sm:w-auto">
-                            <select id="quiz-level-select" class="custom-select w-full">
-                                <option value="A1">A1</option><option value="A2">A2</option><option value="B1" selected>B1</option>
-                                <option value="B2">B2</option><option value="C1">C1</option><option value="C2">C2</option>
-                            </select>
-                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-700">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-                            </div>
-                        </div>
-                        <button id="btn-generate-quiz" class="w-full sm:w-auto btn bg-indigo-600 text-white hover:bg-indigo-700">🎲 Gerar Quiz</button>
+                    <div class="arrow">›</div>
+                </button>
+            </div>
+            
+            <div class="menu-item item-indicadores">
+                <button class="menu-button" onclick="openPowerBI()">
+                    <div class="menu-icon icon-indicadores">📊</div>
+                    <div class="menu-text">
+                        <span class="menu-title">Indicadores</span>
+                        <span class="menu-description">Dashboard e KPI's</span>
                     </div>
-                </div>
-                <div id="quiz-area" class="hidden mt-8 bg-white p-6 rounded-lg shadow-md">
-                </div>
+                    <div class="arrow">›</div>
+                </button>
             </div>
         </div>
     </div>
-    
-    <!-- Modal Container -->
-    <div id="modal-container"></div>
+
+    <!-- Modais -->
+    <div id="auditModal" class="modal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Auditoria</div><button class="close-btn" onclick="closeModal('auditModal')">&times;</button></div><div class="modal-body" id="auditModalBody"></div></div></div>
+    <div id="chatModal" class="modal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Agentes Especializados</div><button class="close-btn" onclick="closeModal('chatModal')">&times;</button></div><div class="modal-body" id="chatModalBody"></div></div></div>
+    <div id="trainingModal" class="modal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Treinamento IA</div><button class="close-btn" onclick="closeModal('trainingModal')">&times;</button></div><div class="modal-body" id="trainingModalBody"></div></div></div>
+    <div id="inspectionModal" class="modal"><div class="modal-content"><div class="modal-header"><div class="modal-title">Autoinspeção</div><button class="close-btn" onclick="closeModal('inspectionModal')">&times;</button></div><div class="modal-body" id="inspectionModalBody"></div></div></div>
 
     <script>
-        // --- VARIÁVEIS GLOBAIS ---
-        let isLoading = false;
-        const ALL_LEVELS = ["A1", "A2", "B1", "B2", "C1", "C2"];
-        let tts = window.speechSynthesis;
-
-        // --- SELETORES DE ELEMENTOS DA DOM ---
-        const navLessonsBtn = document.getElementById('nav-lessons');
-        const navConversationBtn = document.getElementById('nav-conversation');
-        const navFlashcardsBtn = document.getElementById('nav-flashcards');
-        const navQuizBtn = document.getElementById('nav-quiz');
-        const lessonsView = document.getElementById('lessons-view');
-        const conversationView = document.getElementById('conversation-view');
-        const flashcardsView = document.getElementById('flashcards-view');
-        const quizView = document.getElementById('quiz-view');
-        const lessonContentDiv = document.getElementById('lesson-content');
-        const chatHistory = document.getElementById('chat-history');
-        const modalContainer = document.getElementById('modal-container');
-        
-        // --- FUNÇÕES GLOBAIS E DE INICIALIZAÇÃO ---
-        
-        /**
-         * Limpa e analisa uma string para extrair um objeto JSON de forma robusta.
-         * A IA pode retornar o JSON dentro de blocos de código markdown (```json ... ```) ou com texto extra.
-         * Esta função isola o JSON e analisa-o.
-         * @param {string} text - A resposta de texto crua da IA.
-         * @returns {object} O objeto JSON analisado.
-         * @throws {Error} Se nenhum JSON válido for encontrado ou se a análise falhar.
-         */
-        function cleanAndParseJSON(text) {
-            // Tenta encontrar um JSON dentro de um bloco de código markdown.
-            const jsonMatch = text.match(/```json\s*([\s\S]*?)\s*```/);
-            if (jsonMatch && jsonMatch[1]) {
-                try {
-                    return JSON.parse(jsonMatch[1]);
-                } catch (e) {
-                    console.error("Falha ao analisar o JSON do bloco de código:", e);
-                    // Continua para o próximo método se este falhar
-                }
-            }
-
-            // Se não encontrar um bloco de código, procura pelo primeiro '{' ou '['
-            const firstBracket = text.indexOf('{');
-            const firstSquareBracket = text.indexOf('[');
-            
-            if (firstBracket === -1 && firstSquareBracket === -1) {
-                throw new Error("Não foi encontrado um objeto ou array JSON na resposta.");
-            }
-
-            let startIndex;
-            let startChar;
-            let endChar;
-
-            if (firstBracket !== -1 && (firstBracket < firstSquareBracket || firstSquareBracket === -1)) {
-                startIndex = firstBracket;
-                startChar = '{';
-                endChar = '}';
-            } else {
-                startIndex = firstSquareBracket;
-                startChar = '[';
-                endChar = ']';
-            }
-
-            let openBrackets = 0;
-            let endIndex = -1;
-
-            for (let i = startIndex; i < text.length; i++) {
-                if (text[i] === startChar) {
-                    openBrackets++;
-                } else if (text[i] === endChar) {
-                    openBrackets--;
-                }
-
-                if (openBrackets === 0) {
-                    endIndex = i;
-                    break;
-                }
-            }
-
-            if (endIndex === -1) {
-                throw new Error("JSON na resposta está incompleto ou mal formatado.");
-            }
-
-            const jsonString = text.substring(startIndex, endIndex + 1);
-
-            try {
-                return JSON.parse(jsonString);
-            } catch (e) {
-                console.error("Falha final ao analisar o JSON extraído:", e);
-                console.error("String JSON que falhou:", jsonString);
-                throw new Error("Falha ao analisar a resposta JSON limpa da IA.");
-            }
-        }
-
-        async function callGeminiAPI(prompt, schema = null) {
-            const apiKey = "AIzaSyCqPeLEeLVgEBl8seSmI5ng-32F-ItfrLc";
-
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            
-            const payload = { 
-                contents: [{ role: "user", parts: [{ text: prompt }] }],
-                generationConfig: {
-                    // Adiciona um pouco de criatividade para evitar respostas repetidas
-                    temperature: 0.9
-                }
-            };
-
-            if (schema) {
-                payload.generationConfig.responseMimeType = "application/json";
-                payload.generationConfig.responseSchema = schema;
-            }
-            
-            const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
-            
-            if (!response.ok) {
-                const errorBody = await response.json();
-                console.error("API Error Body:", errorBody);
-                throw new Error(`API Error: ${response.statusText}. Verifique a consola do navegador para mais detalhes.`);
-            }
-            
-            const result = await response.json();
-            
-            if (result.candidates && result.candidates.length > 0 && result.candidates[0].content && result.candidates[0].content.parts.length > 0) {
-                return result.candidates[0].content.parts[0].text;
-            }
-            
-            if (result.promptFeedback) {
-                console.error("Prompt Feedback:", result.promptFeedback);
-                throw new Error("A resposta foi bloqueada pelos filtros de segurança da Google. Tente reformular o seu pedido.");
-            }
-            
-            throw new Error("A resposta da IA não contém conteúdo válido.");
-        }
-        
-        function showLoadingState(message, view = 'lessons') {
-            const div = view === 'lessons' ? lessonContentDiv : (view === 'quiz' ? document.getElementById('quiz-area') : chatHistory);
-            if (view === 'lessons' || view === 'quiz') {
-                div.innerHTML = `<div class="flex flex-col items-center justify-center text-center gap-4 h-full"><svg class="animate-spin h-10 w-10 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p class="text-gray-500 font-semibold">${message}</p></div>`;
-            } else {
-                addAIMessageLoader();
-            }
-        }
-
-        function showErrorState(message, view = 'lessons') {
-            const div = view === 'lessons' ? lessonContentDiv : (view === 'quiz' ? document.getElementById('quiz-area') : chatHistory);
-            div.innerHTML = `<div class="text-center text-red-600 bg-red-50 p-4 rounded-lg h-full flex flex-col justify-center"><h3 class="font-bold">Oops! Algo deu errado.</h3><p>Não foi possível carregar o conteúdo.</p><p class="text-sm text-gray-500 mt-2">Detalhe: ${message}</p></div>`;
-        }
-        
-        function playAudio(text, buttonElement) {
-            if (!tts) return;
-            if (tts.speaking) tts.cancel();
-            
-            document.querySelectorAll('.tts-button.playing, .audio-button.playing').forEach(btn => btn.classList.remove('playing'));
-
-            const utterance = new SpeechSynthesisUtterance(text);
-            const voices = tts.getVoices();
-            utterance.voice = voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) || voices.find(v => v.lang.startsWith('en-'));
-            utterance.lang = 'en-US';
-            utterance.rate = 0.95;
-            
-            if (buttonElement) {
-                buttonElement.classList.add('playing');
-                utterance.onend = () => buttonElement.classList.remove('playing');
-                utterance.onerror = () => buttonElement.classList.remove('playing');
-            }
-
-            tts.speak(utterance);
-        }
-
-        // --- LÓGICA DO MODAL ---
-        function showModal(title, content) {
-            const modalHtml = `
-                <div id="modal-backdrop" class="modal-backdrop animate-fade-in-backdrop">
-                    <div class="modal-content animate-fade-in">
-                        <div class="flex justify-between items-center mb-4">
-                            <h2 class="text-2xl font-bold text-gray-800">${title}</h2>
-                            <button id="modal-close-btn" class="text-gray-500 hover:text-gray-800 text-3xl leading-none">&times;</button>
-                        </div>
-                        <div id="modal-body">${content}</div>
-                    </div>
-                </div>
-            `;
-            modalContainer.innerHTML = modalHtml;
-            document.getElementById('modal-close-btn').addEventListener('click', hideModal);
-            document.getElementById('modal-backdrop').addEventListener('click', (e) => {
-                if (e.target.id === 'modal-backdrop') {
-                    hideModal();
-                }
-            });
-        }
-
-        function hideModal() {
-            const modalBackdrop = document.getElementById('modal-backdrop');
-            if (modalBackdrop) {
-                modalBackdrop.style.opacity = 0;
-                setTimeout(() => {
-                    modalContainer.innerHTML = '';
-                }, 300);
-            }
-        }
-
-        function showLoadingModal(title) {
-            const loadingContent = `
-                <div class="flex flex-col items-center justify-center text-center gap-4 p-8">
-                    <svg class="animate-spin h-10 w-10 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    <p class="text-gray-500 font-semibold">A analisar... Por favor, aguarde.</p>
-                </div>`;
-            showModal(title, loadingContent);
-        }
-
-        // --- LÓGICA DE NAVEGAÇÃO ENTRE VIEWS ---
-        function switchView(viewName) {
-            const container = document.getElementById('views-container');
-            container.style.opacity = '0';
-            setTimeout(() => {
-                lessonsView.classList.add('view-hidden');
-                conversationView.classList.add('view-hidden');
-                flashcardsView.classList.add('view-hidden');
-                quizView.classList.add('view-hidden');
-                navLessonsBtn.classList.remove('active');
-                navConversationBtn.classList.remove('active');
-                navFlashcardsBtn.classList.remove('active');
-                navQuizBtn.classList.remove('active');
-
-                if (viewName === 'lessons') {
-                    lessonsView.classList.remove('view-hidden');
-                    navLessonsBtn.classList.add('active');
-                } else if (viewName === 'conversation') {
-                    conversationView.classList.remove('view-hidden');
-                    navConversationBtn.classList.add('active');
-                } else if (viewName === 'flashcards') {
-                    flashcardsView.classList.remove('view-hidden');
-                    navFlashcardsBtn.classList.add('active');
-                } else if (viewName === 'quiz') {
-                    quizView.classList.remove('view-hidden');
-                    navQuizBtn.classList.add('active');
-                }
-                container.style.opacity = '1';
-            }, 300);
-        }
-        
-        // ######################################################
-        // ### CÓDIGO DO MÓDULO DE LIÇÕES (LESSONS) ###
-        // ######################################################
-        const lessonNavButtons = document.querySelectorAll('.lesson-nav-btn');
-        const lessonContentArea = document.getElementById('lesson-content-area');
-        const levelSelect = document.getElementById('level-select');
-        
-        let currentLessonArea = '';
-        let currentLesson = null;
-        
-        async function loadLesson() {
-            if (isLoading) return;
-            if (!currentLessonArea) {
-                lessonContentDiv.innerHTML = `<p class="text-red-500">Por favor, selecione uma área de estudo.</p>`;
-                return;
-            }
-            isLoading = true;
-            showLoadingState('A gerar uma nova lição com IA...');
-            const level = levelSelect.value;
-            try {
-                const aiLesson = await generateAILesson(level, currentLessonArea);
-                currentLesson = aiLesson;
-                displayLesson(aiLesson);
-            } catch (error) {
-                console.error("Erro ao carregar lição:", error);
-                showErrorState(error.message);
-            } finally {
-                isLoading = false;
-            }
-        }
-        
-        async function generateAILesson(level, area) {
-            const lessonSchema = { type: "OBJECT", properties: { "id": { "type": "STRING" }, "titulo": { "type": "STRING" }, "explicacao": { "type": "STRING" }, "exemplos": { "type": "ARRAY", "items": { "type": "STRING" } }, "exercicio": { "type": "STRING" }, "frase_repeticao": { "type": "STRING" }, "transcricao_ipa": { "type": "STRING" }, "traducao_frase": { "type": "STRING" } } };
-            const prompt = `You are an English teacher. Create ONE English lesson, IN ENGLISH, for a Brazilian student. Level: ${level}, Area: ${area}. Return ONLY a valid JSON object that strictly adheres to the provided schema. Do not include any text before or after the JSON object.`;
-            try {
-                const responseText = await callGeminiAPI(prompt, lessonSchema);
-                return cleanAndParseJSON(responseText);
-            } catch (e) {
-                console.error("Falha ao gerar lição:", e);
-                throw new Error("A IA retornou um formato de lição inválido. Tente novamente.");
-            }
-        }
-
-        async function checkAnswerWithAI() {
-            const studentAnswer = lessonContentDiv.querySelector('.exercise-input')?.value;
-            if (!studentAnswer || !currentLesson) return;
-            
-            const checkButton = lessonContentDiv.querySelector('.check-answer-button');
-            if(checkButton) checkButton.disabled = true;
-
-            const prompt = `You are an English teacher correcting an exercise. Is the student's answer correct or incorrect? Respond ONLY with "✅ Correct" or "❌ Incorrect". Exercise: "${currentLesson.exercicio}". Student's answer: "${studentAnswer}".`;
-            const resultText = await callGeminiAPI(prompt);
-            
-            const isCorrect = resultText.includes('✅ Correct');
-            
-            const feedbackArea = document.createElement('div');
-            feedbackArea.id = 'feedback-area';
-            feedbackArea.className = `p-4 mt-4 rounded-lg text-white font-bold animate-fade-in`;
-            feedbackArea.classList.add(isCorrect ? 'bg-green-500' : 'bg-red-500');
-            feedbackArea.textContent = isCorrect ? 'Correct Answer!' : 'Almost there! Keep trying.';
-            lessonContentDiv.querySelector('.p-4.border').appendChild(feedbackArea);
-        }
-        
-        function displayLesson(data) {
-            if (!data || !data.exemplos || !Array.isArray(data.exemplos)) {
-                showErrorState("The AI returned a lesson in an unexpected format. Trying to fetch another lesson...");
-                setTimeout(() => loadLesson(), 1500);
-                return;
-            }
-            
-            const examplesHtml = data.exemplos.map(ex => `
-                <li class="bg-gray-100 p-3 rounded-lg text-gray-800 text-left text-lg flex justify-between items-center">
-                    <span class="font-mono flex-grow">${ex}</span>
-                    <button class="tts-button ml-4 flex-shrink-0" data-text="${ex}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-                    </button>
-                </li>
-            `).join('');
-            const pronunciationDetailsHtml = (data.transcricao_ipa || data.traducao_frase) ? `<div id="pronunciation-details" class="text-sm text-gray-500 mt-2 p-3 bg-gray-50 rounded-md">${data.transcricao_ipa ? `<p><strong>IPA:</strong> <span class="font-mono">${data.transcricao_ipa}</span></p>` : ''}${data.traducao_frase ? `<p><strong>Translation:</strong> <span class="italic">"${data.traducao_frase}"</span></p>` : ''}</div>` : '';
-
-            const lessonHtml = `
-                <div class="w-full text-left space-y-6 animate-fade-in">
-                    <div class="lesson-title flex items-center gap-3">
-                        <h2 class="text-3xl sm:text-4xl font-bold text-indigo-800">${data.titulo}</h2>
-                        <button class="tts-button" data-text="${data.titulo}">
-                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-                        </button>
-                    </div>
-                    <div class="p-4 bg-indigo-50 border-l-4 border-indigo-400 rounded-r-lg">
-                        <div class="flex items-start gap-3">
-                            <p class="lesson-explanation text-gray-800 text-lg flex-grow">${data.explicacao}</p>
-                            <button class="tts-button flex-shrink-0" data-text="${data.explicacao}">
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-                            </button>
-                        </div>
-                        <div class="text-right mt-2">
-                            <button class="btn-explain-better btn bg-indigo-100 text-indigo-700 text-sm py-1 px-3">✨ Explique Melhor</button>
-                        </div>
-                    </div>
-                    <div><h3 class="text-xl font-semibold mb-3 text-gray-700">Examples:</h3><ul class="lesson-examples space-y-3">${examplesHtml}</ul></div>
-                    <div class="p-4 border border-gray-200 rounded-lg shadow-sm">
-                        <h3 class="text-xl font-semibold mb-3 text-gray-700">Exercise:</h3>
-                        <p class="lesson-exercise-prompt mb-3 text-gray-700 text-lg">${data.exercicio}</p>
-                        <textarea class="exercise-input w-full p-2 border border-gray-300 rounded-md text-lg" rows="2" placeholder="Type your answer..."></textarea>
-                        <div class="text-right mt-3"><button class="check-answer-button btn bg-green-600 text-white hover:bg-green-700">Check</button></div>
-                    </div>
-                    <div class="p-4 bg-gray-50 rounded-lg">
-                        <div class="flex items-center justify-between gap-4">
-                            <div>
-                                <h3 class="text-lg font-semibold text-gray-700">Repeat aloud:</h3>
-                                <p class="lesson-repetition text-2xl text-indigo-600 font-medium">${data.frase_repeticao}</p>
-                            </div>
-                            <button class="audio-button bg-indigo-600 text-white p-3 rounded-full hover:bg-indigo-700 active:scale-95 shadow-lg flex items-center justify-center h-12 w-12" data-text="${data.frase_repeticao}">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-                            </button>
-                        </div>
-                        ${pronunciationDetailsHtml}
-                    </div>
-                    <div class="text-right pt-4"><button class="next-lesson-button btn btn-primary">Next Lesson</button></div>
-                </div>`;
-            lessonContentDiv.innerHTML = lessonHtml;
-        }
-
-        async function getBetterExplanation() {
-            if (!currentLesson) return;
-            const { titulo, explicacao } = currentLesson;
-            const level = levelSelect.value;
-            showLoadingModal('Nova Explicação');
-            
-            try {
-                const prompt = `The current topic is "${titulo}". The original explanation is: "${explicacao}". Please provide a simpler explanation, an analogy, or a different perspective for a student at level ${level}. Keep it concise, friendly, and in English. Start with a phrase like "Let's try looking at it this way:" or "Think of it like this:".`;
-                const newExplanation = await callGeminiAPI(prompt);
-                showModal('Nova Explicação', `<p class="text-lg">${newExplanation}</p>`);
-            } catch (error) {
-                console.error("Error getting better explanation:", error);
-                showModal('Erro', `<p class="text-red-500">Não foi possível gerar uma nova explicação. Tente novamente.</p>`);
-            }
-        }
-
-        // ############################################################
-        // ### INÍCIO DO CÓDIGO DO MÓDULO DE CONVERSAÇÃO (CONVO) ###
-        // ############################################################
-        const convoConfigPanel = document.getElementById('config-panel');
-        const convoArea = document.getElementById('conversation-area');
-        const convoLevelSelect = document.getElementById('convo-level-select');
-        const convoThemeSelect = document.getElementById('convo-theme-select');
-        const btnStartConvo = document.getElementById('btn-start-convo');
-        const convoUserInput = document.getElementById('user-input');
-        const btnSendConvo = document.getElementById('btn-send-convo');
-        const btnMic = document.getElementById('btn-mic');
-        const btnNewDialogue = document.getElementById('btn-new-dialogue');
-        const btnAnalyzeConvo = document.getElementById('btn-analyze-convo');
-
-        let convoIsLoading = false;
-        let conversationLog = [];
-        let recognition;
-        let isRecognizing = false;
-
-        const themesByLevel = {
-            A1: ["Introductions", "Family", "Food & Drink", "Animals"], 
-            A2: ["Restaurant", "Shopping", "Directions", "Hobbies", "The Weather", "Daily Routine"], 
-            B1: ["Hotel", "Airport", "Job Interview", "Future Plans", "Making Plans", "Describing People"], 
-            B2: ["Opinion Debates", "Work Meetings", "Problem Solving", "Culture & Travel", "Advantages & Disadvantages", "Social Causes"], 
-            C1: ["Abstract Discussions", "Current News", "Technology & Society", "Ethics", "Job Market", "Film/Book Review"], 
-            C2: ["Academic Topics", "Philosophy", "Global Politics", "Innovation", "Impact of Globalization", "Scientific Advances"]
+        const originalModalContent = {
+            auditModalBody: `<div class="sub-menu"><button class="sub-button" onclick="startSimulation()">📝 Simulação<div style="font-size: 12px; margin-top: 5px; opacity: 0.8; font-weight: 400;">IA gera checklist → Autoinspeção → Resultado + Plano</div></button><button class="sub-button secondary" onclick="startFiscalizacao()">🏛️ Fiscalização<div style="font-size: 12px; margin-top: 5px; opacity: 0.8; font-weight: 400;">Análise de documentos e não conformidades</div></button></div>`,
+            chatModalBody: `<div id="agentSelection"><div class="agent-grid"><div class="agent-card" onclick="openChat('MAPA')"><div class="agent-name">🌾 Agente MAPA</div><div class="agent-desc">Regulamentações agropecuárias</div><div style="margin-top: 8px;"><span class="status-indicator status-active"></span>Online</div></div><div class="agent-card" onclick="openChat('Anvisa')"><div class="agent-name">💊 Agente Anvisa</div><div class="agent-desc">Vigilância sanitária</div><div style="margin-top: 8px;"><span class="status-indicator status-active"></span>Online</div></div><div class="agent-card" onclick="openChat('RFB')"><div class="agent-name">💰 Agente RFB</div><div class="agent-desc">Regulamentações fiscais</div><div style="margin-top: 8px;"><span class="status-indicator status-active"></span>Online</div></div></div></div><div id="chatInterface" class="chat-interface"><div id="chatHeader" class="chat-header"></div><div id="chatMessages" class="chat-messages"></div><div class="chat-input-area"><input type="text" id="chatInput" class="chat-input" placeholder="Digite sua pergunta..."><button class="send-btn" onclick="sendMessage()">Enviar</button></div></div>`,
+            trainingModalBody: `<div class="sub-menu"><button class="sub-button" onclick="checkTrainingStatus()">🔍 Diagnóstico de Treinamento & Reciclagem<div style="font-size: 11px; margin-top: 5px; opacity: 0.8; font-weight: 400;">IA consulta banco de dados e identifica expirações em 90 dias</div></button><button class="sub-button secondary" onclick="manageAttendance()">📝 Gerenciar Presença</button><button class="sub-button" onclick="createEvaluation()">📊 Criar Avaliação</button></div>`,
+            inspectionModalBody: `<div class="sub-menu"><button class="sub-button" onclick="startRonda()">🔄 Ronda Programada</button><button class="sub-button secondary" onclick="startBlitz()">⚡ Blitz Surpresa</button></div>`
         };
 
-        function updateConvoThemes() {
-            const level = convoLevelSelect.value;
-            const themes = themesByLevel[level];
-            convoThemeSelect.innerHTML = themes.map(theme => `<option value="${theme}">${theme}</option>`).join('');
-        }
+        function showView(modalBodyId, viewHtml) { document.getElementById(modalBodyId).innerHTML = viewHtml; }
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'block'; resetModal(modalId); }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function resetModal(modalId) { if (originalModalContent[modalId + 'Body']) showView(modalId + 'Body', originalModalContent[modalId + 'Body']); }
+        function openPowerBI() { window.open('https://powerbi.microsoft.com', '_blank', 'noopener,noreferrer'); }
 
-        function handleStartConversation() {
-            convoConfigPanel.classList.add('hidden');
-            convoArea.classList.remove('hidden');
-            conversationLog = [];
-            chatHistory.innerHTML = '';
-            getAIResponse();
-        }
-
-        async function getAIResponse(userMessage = null) {
-            if (convoIsLoading) return;
-            convoIsLoading = true;
-            btnSendConvo.disabled = true;
-            convoUserInput.disabled = true;
-
-            let studentTurnId;
-            if (userMessage) {
-                studentTurnId = addStudentMessage(userMessage);
-            }
-            showLoadingState('', 'conversation');
-
-            const level = convoLevelSelect.value;
-            const theme = convoThemeSelect.value;
-            
-            const schema = {
-                type: "OBJECT",
-                properties: {
-                    "fala_da_ia": { type: "STRING" }, "fala_ipa": { type: "STRING" },
-                    "avaliacao_gramatical": { type: "OBJECT", properties: { "correto": { type: "BOOLEAN" }, "mensagem": { type: "STRING" } } },
-                    "avaliacao_da_pronuncia": { type: "OBJECT", properties: { "avaliacao": { type: "STRING" }, "dica": { type: "STRING" } } }
-                }
-            };
-            
-            const prompt = `You are an advanced English tutor (ParlAI) simulating a conversation with a Brazilian student. Level: ${level}. Theme: ${theme}. Conversation history: ${JSON.stringify(conversationLog)}. Your task is to analyze the student's last message ("${userMessage || ''}") or start the conversation. 1. Evaluate grammar and pronunciation. 2. Formulate a natural response ('fala_da_ia'). 3. Provide the IPA transcription for your speech. Return ONLY a valid JSON object that strictly adheres to the schema.`;
-            
-            try {
-                const responseText = await callGeminiAPI(prompt, schema);
-                const aiData = cleanAndParseJSON(responseText);
-                processAIResponse(aiData, studentTurnId);
-            } catch (error) {
-                console.error("Erro na IA de conversação:", error);
-                updateAIMessageLoader('Oops! I had a problem responding. Shall we try again?');
-            } finally {
-                convoIsLoading = false;
-                btnSendConvo.disabled = false;
-                convoUserInput.disabled = false;
-                convoUserInput.focus();
-            }
-        }
-
-        function processAIResponse(data, studentTurnId) {
-            updateAIMessageLoader(data.fala_da_ia, data.fala_ipa);
-            playAudio(data.fala_da_ia);
-            conversationLog.push({ role: 'ia', content: data.fala_da_ia, timestamp: new Date().toLocaleTimeString() });
-
-            if (studentTurnId) {
-                addFeedback(studentTurnId, data.avaliacao_gramatical, data.avaliacao_da_pronuncia);
-            }
-        }
-
-        function addStudentMessage(text) {
-            const turnId = `turn-${Date.now()}`;
-            const messageContainer = document.createElement('div');
-            messageContainer.id = turnId;
-            messageContainer.className = 'flex flex-col items-end space-y-2';
-
-            const bubble = document.createElement('div');
-            bubble.className = 'p-3 rounded-lg max-w-xs sm:max-w-md user-bubble shadow-md';
-            bubble.textContent = text;
-            
-            messageContainer.appendChild(bubble);
-            chatHistory.appendChild(messageContainer);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-            
-            conversationLog.push({ role: 'aluno', content: text, timestamp: new Date().toLocaleTimeString() });
-            return turnId;
-        }
-
-        function addAIMessageLoader() {
-            const messageDiv = document.createElement('div');
-            messageDiv.className = 'flex justify-start';
-            messageDiv.id = 'loading-bubble-container';
-            messageDiv.innerHTML = `<div class="p-3 rounded-lg ia-bubble shadow-md"><div class="flex items-center space-x-2"><div class="w-2 h-2 bg-gray-500 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-gray-500 rounded-full animate-pulse [animation-delay:0.2s]"></div><div class="w-2 h-2 bg-gray-500 rounded-full animate-pulse [animation-delay:0.4s]"></div></div></div>`;
-            chatHistory.appendChild(messageDiv);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
-
-        function updateAIMessageLoader(text, ipa) {
-            const loadingContainer = document.getElementById('loading-bubble-container');
-            if (!loadingContainer) return;
-            
-            loadingContainer.id = '';
-            loadingContainer.innerHTML = `
-                <div class="p-3 rounded-lg ia-bubble shadow-md space-y-2">
-                    <p class="text-lg">${text}</p>
-                    <p class="text-xs text-gray-500 font-mono border-t border-gray-300 pt-1">${ipa}</p>
-                </div>
-            `;
-        }
-
-        function addFeedback(turnId, grammar, pronunciation) {
-            const turnContainer = document.getElementById(turnId);
-            if (!turnContainer) return;
-
-            const feedbackContainer = document.createElement('div');
-            feedbackContainer.className = 'p-3 mt-1 rounded-lg max-w-xs sm:max-w-md border text-sm shadow-sm';
-            
-            const isGrammarCorrect = grammar.correto;
-            if (isGrammarCorrect) {
-                feedbackContainer.classList.add('bg-green-50', 'border-green-200');
-            } else {
-                feedbackContainer.classList.add('bg-red-50', 'border-red-200');
-            }
-
-            feedbackContainer.innerHTML = `
-                <div class="font-bold ${isGrammarCorrect ? 'text-green-700' : 'text-red-700'}">Grammar: ${grammar.mensagem}</div>
-                <div class="mt-2 pt-2 border-t border-gray-300">
-                    <p class="font-bold text-blue-700">Pronunciation: ${pronunciation.avaliacao}</p>
-                    <p class="text-blue-600 italic">Tip: ${pronunciation.dica}</p>
-                </div>
-            `;
-            turnContainer.appendChild(feedbackContainer);
-            chatHistory.scrollTop = chatHistory.scrollHeight;
-        }
-        
-        async function analyzeConversation() {
-            if (conversationLog.length === 0) {
-                showModal("Análise de Conversa", "<p>A conversa está vazia. Fale algo primeiro!</p>");
-                return;
-            }
-            showLoadingModal("Análise de Conversa");
-
-            const schema = {
-                type: "OBJECT",
-                properties: {
-                    "resumo": { "type": "STRING" },
-                    "pontos_fortes": { "type": "ARRAY", "items": { "type": "STRING" } },
-                    "areas_a_melhorar": { "type": "ARRAY", "items": { "type": "OBJECT", "properties": { "erro": { "type": "STRING" }, "sugestao": { "type": "STRING" } } } },
-                    "topicos_sugeridos": { "type": "ARRAY", "items": { "type": "STRING" } }
-                }
-            };
-            const prompt = `You are an expert English tutor. Analyze the following conversation log. The student is at level ${convoLevelSelect.value}. Provide a concise summary, identify strengths, point out areas for improvement with suggestions, and recommend topics for future study. The analysis must be in ENGLISH. Return ONLY a valid JSON object. Conversation Log: ${JSON.stringify(conversationLog)}`;
-            
-            try {
-                const responseText = await callGeminiAPI(prompt, schema);
-                const analysis = cleanAndParseJSON(responseText);
-                
-                const strengthsHtml = analysis.pontos_fortes.map(item => `<li class="flex items-start"><span class="text-green-500 mr-2">✓</span><span>${item}</span></li>`).join('');
-                const improvementsHtml = analysis.areas_a_melhorar.map(item => `<li class="mb-2"><p><span class="text-red-500 mr-2">✗</span><strong>Mistake:</strong> ${item.erro}</p><p class="ml-4 text-gray-600"><strong>Suggestion:</strong> ${item.sugestao}</p></li>`).join('');
-                const topicsHtml = analysis.topicos_sugeridos.map(item => `<span class="bg-indigo-100 text-indigo-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">${item}</span>`).join('');
-
-                const modalContent = `
-                    <div class="space-y-6 text-left">
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Conversation Summary</h3>
-                            <p class="text-gray-600">${analysis.resumo}</p>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-2">What you did well:</h3>
-                            <ul class="list-none space-y-1 text-gray-600">${strengthsHtml}</ul>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Areas for improvement:</h3>
-                            <ul class="list-none space-y-2 text-gray-600">${improvementsHtml}</ul>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold text-gray-700 mb-2">Suggested topics to study:</h3>
-                            <div>${topicsHtml}</div>
-                        </div>
-                    </div>
-                `;
-                showModal("Análise de Conversa", modalContent);
-            } catch (error) {
-                console.error("Error analyzing conversation:", error);
-                showModal("Erro", `<p class="text-red-500">Não foi possível analisar a conversa. Tente novamente.</p>`);
-            }
-        }
-
-        function setupSpeechRecognition() {
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if (!SpeechRecognition) {
-                btnMic.disabled = true;
-                btnMic.setAttribute('data-tooltip', 'Reconhecimento de voz não suportado');
-                return;
-            }
-            recognition = new SpeechRecognition();
-            recognition.continuous = false;
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-
-            recognition.onstart = () => {
-                isRecognizing = true;
-                btnMic.classList.add('mic-active');
-                btnMic.setAttribute('data-tooltip', 'Ouvindo...');
-                convoUserInput.placeholder = 'Estou ouvindo...';
-            };
-
-            recognition.onend = () => {
-                isRecognizing = false;
-                btnMic.classList.remove('mic-active');
-                btnMic.setAttribute('data-tooltip', 'Usar microfone');
-                convoUserInput.placeholder = 'Digite ou fale...';
-            };
-            
-            recognition.onerror = (event) => {
-                let errorMessage = 'Erro no microfone. Tente novamente.';
-                if (event.error === 'not-allowed') {
-                    errorMessage = 'Permissão para microfone negada.';
-                } else if (event.error === 'no-speech') {
-                    errorMessage = 'Nenhuma fala detectada. Tente novamente.';
-                }
-                convoUserInput.placeholder = errorMessage;
-                console.error(`Speech recognition error: ${event.error}`);
-            };
-            
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                convoUserInput.value = transcript;
-                if (transcript) {
-                    btnSendConvo.click();
-                }
-            };
-        }
-        
-        // ############################################################
-        // ### INÍCIO DO CÓDIGO DO MÓDULO DE FLASHCARDS ###
-        // ############################################################
-        const flashcardLevelSelect = document.getElementById('flashcard-level-select');
-        const flashcardContainer = document.getElementById('flashcard');
-        const flashcardInner = document.getElementById('flashcard-inner');
-        const flashcardFront = document.getElementById('flashcard-front');
-        const flashcardBack = document.getElementById('flashcard-back');
-        const flashcardProgress = document.getElementById('flashcard-progress');
-        const btnPrev = document.getElementById('flashcard-prev');
-        const btnNext = document.getElementById('flashcard-next');
-        const btnFlip = document.getElementById('flashcard-flip');
-        const btnCorrect = document.getElementById('flashcard-correct');
-        const btnWrong = document.getElementById('flashcard-wrong');
-        const btnGenerateDeck = document.getElementById('btn-generate-deck');
-        const flashcardControls = document.getElementById('flashcard-controls');
-
-        let currentFlashcardIndex = 0;
-        let currentDeck = [];
-
-        async function generateFlashcardDeckWithAI() {
-            const level = flashcardLevelSelect.value;
-            flashcardFront.innerHTML = `<div class="flex flex-col items-center justify-center text-center gap-4 h-full"><svg class="animate-spin h-8 w-8 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg><p>Gerando novo baralho...</p></div>`;
-            flashcardBack.innerHTML = '';
-            flashcardControls.classList.add('hidden');
-            
-            const schema = {
-                type: "ARRAY",
-                items: {
-                    type: "OBJECT",
-                    properties: { "ingles": { "type": "STRING" }, "portugues": { "type": "STRING" } }
-                }
-            };
-            const prompt = `You are an English vocabulary expert. Generate a list of 20 useful English vocabulary words for a student at the ${level} level. Provide the Portuguese translation. Return ONLY a valid JSON array of objects.`;
-            
-            try {
-                const responseText = await callGeminiAPI(prompt, schema);
-                currentDeck = cleanAndParseJSON(responseText);
-                currentFlashcardIndex = 0;
-                displayCurrentFlashcard();
-                flashcardControls.classList.remove('hidden');
-            } catch (error) {
-                console.error("Erro ao gerar flashcards:", error);
-                flashcardFront.innerHTML = `<p class="text-xl font-bold text-red-200">Erro ao gerar baralho. Tente novamente.</p>`;
-            }
-        }
-
-        function displayCurrentFlashcard() {
-            if (currentDeck.length === 0) {
-                flashcardFront.innerHTML = `<p class="text-2xl font-bold">Sem cards</p>`;
-                flashcardBack.innerHTML = `<p class="text-2xl font-bold">Sem cards</p>`;
-                flashcardProgress.textContent = '0 de 0';
-                return;
-            }
-            
-            const card = currentDeck[currentFlashcardIndex];
-            flashcardContainer.classList.remove('flipped');
-
+        // --- Auditoria ---
+        function startSimulation() {
+            showView('auditModalBody', `<div class="loader">🤖 Gerando checklist...</div>`);
             setTimeout(() => {
-                flashcardFront.innerHTML = `
-                    <p class="text-4xl font-bold">${card.ingles}</p>
-                    <button class="tts-button mt-4" data-text="${card.ingles}">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-                    </button>
-                `;
-                flashcardBack.innerHTML = `
-                    <div class="text-center">
-                        <p class="text-4xl font-bold">${card.portugues}</p>
-                        <button class="btn-example-sentence btn bg-blue-500 text-white text-sm py-1 px-3 mt-4">✨ Usar numa Frase</button>
-                        <div class="sentence-container mt-3 text-lg italic text-gray-300 min-h-[2.5em] p-2"></div>
-                    </div>
-                `;
-                flashcardProgress.textContent = `${currentFlashcardIndex + 1} de ${currentDeck.length}`;
-            }, 300);
+                showView('auditModalBody', `<h4>Checklist de Simulação - Almoxarifado</h4><div id="simulationChecklist" class="process-flow">
+                    <div class="checklist-item"><input type="checkbox" id="sim-check-1" checked data-desc="O ambiente está limpo e organizado?"><label for="sim-check-1">1. Limpeza e organização do ambiente</label></div>
+                    <div class="checklist-item"><input type="checkbox" id="sim-check-2" checked data-desc="A temperatura está controlada?"><label for="sim-check-2">2. Controle de temperatura</label></div>
+                    <div class="checklist-item"><input type="checkbox" id="sim-check-3" data-desc="Os produtos estão em paletes?"><label for="sim-check-3">3. Armazenamento em paletes</label></div>
+                    <div class="checklist-item"><input type="checkbox" id="sim-check-4" checked data-desc="O acesso é restrito?"><label for="sim-check-4">4. Restrição de acesso</label></div>
+                </div><button class="sub-button" onclick="analyzeSimulation()">Analisar Respostas</button><button class="sub-button tertiary" onclick="resetModal('auditModal')">Voltar</button>`);
+            }, 1500);
         }
 
-        async function getExampleSentence(event) {
-            const button = event.target;
-            const sentenceContainer = button.nextElementSibling;
-            const word = currentDeck[currentFlashcardIndex].ingles;
-            const level = flashcardLevelSelect.value;
-            
-            button.disabled = true;
-            sentenceContainer.innerHTML = `<div class="animate-spin h-5 w-5 mx-auto border-b-2 border-white rounded-full"></div>`;
-
-            try {
-                const prompt = `Generate one simple and clear example sentence in English for a ${level} level student using the word "${word}". Return only the sentence as a string.`;
-                const sentence = await callGeminiAPI(prompt);
-                sentenceContainer.textContent = `"${sentence}"`;
-            } catch (error) {
-                console.error("Error getting example sentence:", error);
-                sentenceContainer.textContent = "Could not load example.";
-            } finally {
-                button.disabled = false;
-            }
+        function analyzeSimulation() {
+            showView('auditModalBody', `<div class="loader">📊 Analisando dados...</div>`);
+            setTimeout(() => {
+                const checklist = document.getElementById('simulationChecklist');
+                const items = checklist.querySelectorAll('input[type="checkbox"]');
+                let conformes = 0;
+                let naoConformesHtml = '';
+                items.forEach((item, index) => {
+                    if (item.checked) {
+                        conformes++;
+                    } else {
+                        naoConformesHtml += `<div class="flow-step"><div class="step-number">${index + 1}</div><div><strong>Ação Corretiva:</strong> Resolver pendência de "${item.dataset.desc}"</div></div>`;
+                    }
+                });
+                const score = Math.round((conformes / items.length) * 100);
+                showView('auditModalBody', `<h4>Resultado da Simulação</h4><div class="result-card"><strong>Pontuação:</strong> ${score}%<br><strong>Itens não conformes:</strong> ${items.length - conformes}</div><h4>Plano de Ação Sugerido</h4><div class="process-flow">${naoConformesHtml || '<p>✅ Nenhuma não conformidade encontrada!</p>'}</div><button class="sub-button tertiary" onclick="resetModal('auditModal')">Voltar</button>`);
+            }, 1500);
         }
 
-        function flipCard() {
-            flashcardContainer.classList.toggle('flipped');
+        function startFiscalizacao() { showView('auditModalBody', `<h4>Análise de Fiscalização</h4><p style="font-size:13px; color: #666;">Envie o documento (.pdf) para análise da IA.</p><div class="upload-area" onclick="this.nextElementSibling.click()">Clique para selecionar o arquivo</div><input type="file" style="display: none;" onchange="analyzeFiscalizacao(this)"><button class="sub-button tertiary" onclick="resetModal('auditModal')">Voltar</button>`); }
+        function analyzeFiscalizacao(input) {
+            const fileName = input.files[0] ? input.files[0].name : "documento.pdf";
+            showView('auditModalBody', `<div class="loader">🔍 Analisando "${fileName}"...</div>`);
+            setTimeout(() => {
+                showView('auditModalBody', `<h4>Análise do Documento</h4><div class="result-card"><strong>Pontos Extraídos:</strong><br>- Necessidade de ajuste no POP-002.<br>- Prazo de 15 dias para correção.<br>- Risco de multa por não conformidade no item 7.3.</div><button class="sub-button tertiary" onclick="resetModal('auditModal')">Voltar</button>`);
+            }, 2000);
         }
 
-        function nextCard() {
-            currentFlashcardIndex = (currentFlashcardIndex + 1) % currentDeck.length;
-            displayCurrentFlashcard();
+        // --- Chatbot ---
+        let currentAgent = '';
+        function openChat(agent) {
+            currentAgent = agent;
+            document.getElementById('agentSelection').classList.add('hidden');
+            const chatInterface = document.getElementById('chatInterface');
+            chatInterface.classList.add('active');
+            const header = chatInterface.querySelector('.chat-header');
+            header.textContent = `Chat com Agente ${agent}`;
+            header.style.background = 'var(--vinci-violet)'; 
+            chatInterface.querySelector('.chat-messages').innerHTML = `<div class="message bot-message">Olá! Sou o agente do ${agent}. Como posso ajudá-lo hoje?</div>`;
+        }
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            if (!input.value.trim()) return;
+            const messagesDiv = document.getElementById('chatMessages');
+            messagesDiv.innerHTML += `<div class="message user-message">${input.value}</div>`;
+            input.value = '';
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message bot-message typing-indicator';
+            typingIndicator.textContent = 'Digitando...';
+            messagesDiv.appendChild(typingIndicator);
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            setTimeout(() => {
+                messagesDiv.removeChild(typingIndicator);
+                const responses = {'MAPA': 'Sua dúvida se relaciona à IN 15/2021. Precisa de mais detalhes?', 'Anvisa': 'Segundo a RDC 430/2020, isso requer atenção. Posso revisar o procedimento.', 'RFB': 'Conforme a Lei 14.382/2022, há implicações fiscais. Quer que eu detalhe?'};
+                messagesDiv.innerHTML += `<div class="message bot-message">${responses[currentAgent]}</div>`;
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
+            }, 1500);
         }
 
-        function prevCard() {
-            currentFlashcardIndex = (currentFlashcardIndex - 1 + currentDeck.length) % currentDeck.length;
-            displayCurrentFlashcard();
-        }
-
-        // ############################################################
-        // ### INÍCIO DO CÓDIGO DO MÓDULO DE QUIZ ###
-        // ############################################################
-        const quizConfigPanel = document.getElementById('quiz-config-panel');
-        const quizArea = document.getElementById('quiz-area');
-        const quizLevelSelect = document.getElementById('quiz-level-select');
-        const btnGenerateQuiz = document.getElementById('btn-generate-quiz');
-        
-        let currentQuizQuestions = [];
-        let currentQuizQuestionIndex = 0;
-        let quizScore = 0;
-
-        async function startQuiz() {
-            quizArea.classList.remove('hidden');
-            showLoadingState('A gerar 7 perguntas únicas para si...', 'quiz');
-            
-            try {
-                const level = quizLevelSelect.value;
-                const questions = await generateQuizQuestionsWithAI(level);
-                if (!questions || questions.length < 7) {
-                    showErrorState("A IA não conseguiu gerar o quiz completo. Tente novamente.", 'quiz');
-                    return;
-                }
-                currentQuizQuestions = questions;
-                currentQuizQuestionIndex = 0;
-                quizScore = 0;
-                displayQuizQuestion();
-            } catch (error) {
-                console.error("Erro ao iniciar quiz:", error);
-                showErrorState(error.message, 'quiz');
-            }
-        }
-
-        async function generateQuizQuestionsWithAI(level) {
-            const questionSchema = { type: "OBJECT", properties: { "pergunta": { "type": "STRING" }, "alternativas": { type: "OBJECT", properties: { "A": { "type": "STRING" }, "B": { "type": "STRING" }, "C": { "type": "STRING" }, "D": { "type": "STRING" }, "E": { "type": "STRING" } } }, "correta": { "type": "STRING" }, "explicacao": { "type": "STRING" } } };
-            const quizSchema = { type: "ARRAY", maxItems: 7, minItems: 7, items: questionSchema };
-            const prompt = `You are an English examiner. Generate a quiz of 7 multiple-choice questions IN ENGLISH for a student at level ${level}. Each question must have 5 alternatives (A, B, C, D, E). The correct answer must be only the letter. The explanation must be short, clear, and in English. Return ONLY a valid JSON array of 7 objects.`;
-            
-            try {
-                const responseText = await callGeminiAPI(prompt, quizSchema);
-                return cleanAndParseJSON(responseText);
-            } catch (error) {
-                console.error("Erro ao gerar quiz:", error);
-                throw new Error("A IA retornou um formato de quiz inválido. Tente novamente.");
-            }
-        }
-
-        function displayQuizQuestion() {
-            const question = currentQuizQuestions[currentQuizQuestionIndex];
-            const progress = currentQuizQuestionIndex + 1;
-            const total = currentQuizQuestions.length;
-
-            const optionsHtml = Object.entries(question.alternativas).map(([key, value]) => `
-                <button class="quiz-option-btn bg-white" data-option="${key}">
-                    <span class="font-bold mr-2">${key}.</span> ${value}
-                </button>
-            `).join('');
-
-            quizArea.innerHTML = `
-                <div class="w-full animate-fade-in">
-                    <div class="mb-4">
-                        <p class="font-semibold">Pergunta ${progress} de ${total}</p>
-                    </div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6">
-                        <div class="bg-indigo-600 h-2.5 rounded-full" style="width: ${(progress / total) * 100}%"></div>
-                    </div>
-                    <div class="text-left">
-                        <p class="text-xl font-semibold mb-6">${question.pergunta}</p>
-                        <div class="space-y-3" id="quiz-options-container">${optionsHtml}</div>
-                        <div id="quiz-explanation-area" class="mt-4 p-3 rounded-lg text-sm hidden"></div>
-                        <div class="text-right mt-6">
-                            <button id="btn-next-question" class="btn btn-primary hidden">Próxima Pergunta</button>
+        // --- Treinamento (NOVA FUNÇÃO) ---
+        function checkTrainingStatus() {
+            showView('trainingModalBody', `<div class="loader">🤖 IA consultando banco de dados de RH e Certificações...</div>`);
+            setTimeout(() => {
+                showView('trainingModalBody', `
+                    <h4>Diagnóstico de Reciclagem</h4>
+                    <p style="font-size:11px; margin-bottom:10px;">Colaboradores com cursos pendentes ou vencimento em < 90 dias:</p>
+                    <div class="item-list">
+                        <div class="list-item">
+                            <span class="collab-name">JOÃO SILVA</span>
+                            <div class="course-status">
+                                <span>Cursos: NR-10, Segurança de Carga</span>
+                                <span class="expiry-tag">Expira em 45 dias</span>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <span class="collab-name">BRUNO SANTOS</span>
+                            <div class="course-status">
+                                <span>Cursos: Operação de Empilhadeira</span>
+                                <span class="expiry-tag">Expira em 82 dias</span>
+                            </div>
+                        </div>
+                        <div class="list-item">
+                            <span class="collab-name">MARIA OLIVEIRA</span>
+                            <div class="course-status">
+                                <span>Cursos: Gestão de Resíduos</span>
+                                <span class="expiry-tag" style="color:var(--vinci-jaune)">Pendente / Sem Registro</span>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `;
-        }
-        
-        function handleQuizAnswer(selectedOptionKey) {
-            const question = currentQuizQuestions[currentQuizQuestionIndex];
-            const isCorrect = selectedOptionKey === question.correta;
-            
-            if (isCorrect) {
-                quizScore++;
-            }
-
-            document.querySelectorAll('.quiz-option-btn').forEach(btn => {
-                btn.disabled = true;
-                const optionKey = btn.dataset.option;
-                if (optionKey === question.correta) {
-                    btn.classList.add('correct');
-                } else if (optionKey === selectedOptionKey) {
-                    btn.classList.add('incorrect');
-                }
-            });
-            
-            const explanationArea = document.getElementById('quiz-explanation-area');
-            explanationArea.textContent = question.explicacao;
-            explanationArea.classList.remove('hidden');
-            if (isCorrect) {
-                explanationArea.classList.add('bg-green-100', 'text-green-800');
-            } else {
-                explanationArea.classList.add('bg-red-100', 'text-red-800');
-            }
-
-            document.getElementById('btn-next-question').classList.remove('hidden');
+                    <button class="sub-button" style="margin-top:15px; background:var(--vinci-rouge-logo); border-left-color:var(--vinci-jaune)" onclick="notifyCollaborators()">
+                        📧 Notificar & Inscrever Automaticamente
+                    </button>
+                    <button class="sub-button tertiary" onclick="resetModal('trainingModal')">Voltar</button>
+                `);
+            }, 2000);
         }
 
-        function nextQuizQuestion() {
-            currentQuizQuestionIndex++;
-            if (currentQuizQuestionIndex < currentQuizQuestions.length) {
-                displayQuizQuestion();
-            } else {
-                displayQuizResult();
-            }
-        }
-
-        function displayQuizResult() {
-            quizArea.innerHTML = `
-                <div class="text-center p-8 animate-fade-in">
-                    <h2 class="text-2xl font-bold">🎉 Quiz Finalizado!</h2>
-                    <p class="text-4xl font-bold my-4 text-indigo-600">${quizScore} / ${currentQuizQuestions.length}</p>
-                    <p class="text-gray-700">Você acertou ${quizScore} de ${currentQuizQuestions.length} perguntas!</p>
-                    <div class="mt-6">
-                        <button id="btn-restart-quiz" class="btn btn-primary">🎲 Gerar Novo Quiz</button>
+        function notifyCollaborators() {
+            showView('trainingModalBody', `<div class="loader">✉️ Disparando e-mails para colaboradores e gestores...</div>`);
+            setTimeout(() => {
+                showView('trainingModalBody', `
+                    <h4>Ação Concluída</h4>
+                    <div class="result-card">
+                        ✅ <strong>Notificações Enviadas:</strong><br>
+                        - João Silva: E-mail de reciclagem enviado.<br>
+                        - Bruno Santos: E-mail de reciclagem enviado.<br>
+                        - Maria Oliveira: Inscrição em novo curso realizada.<br><br>
+                        <em>Os colaboradores receberam os links para inscrição via Forms.</em>
                     </div>
-                </div>
-            `;
+                    <button class="sub-button tertiary" onclick="resetModal('trainingModal')">Voltar</button>
+                `);
+            }, 1500);
         }
 
-
-        // --- FUNÇÃO DE INICIALIZAÇÃO GERAL ---
-        
-        function init() {
-            try {
-                updateConvoThemes();
-                setupSpeechRecognition();
-                if (tts.onvoiceschanged !== undefined) {
-                    tts.onvoiceschanged = tts.getVoices;
-                }
-            } catch (error) {
-                console.error("Initialization failed:", error);
-                showErrorState("Failed to initialize the app. Please check the console for details.");
-            }
+        function manageAttendance() { showView('trainingModalBody', `<h4>Lista de Presença</h4><div class="item-list"><div class="list-item" style="flex-direction:row; justify-content:space-between"><strong>João Silva</strong><span class="status-completed">Presente</span></div><div class="list-item" style="flex-direction:row; justify-content:space-between"><strong>Bruno Santos</strong><span class="status-pending">Ausente</span></div></div><button class="sub-button tertiary" onclick="resetModal('trainingModal')">Voltar</button>`); }
+        function createEvaluation() {
+            showView('trainingModalBody', `<div class="loader">📊 Criando avaliação...</div>`);
+            setTimeout(() => {
+                showView('trainingModalBody', `<h4>Avaliação Pronta</h4><div class="result-card">A avaliação foi gerada.</div><button class="sub-button" onclick="resetModal('trainingModal')">Enviar Avaliação</button><button class="sub-button tertiary" onclick="resetModal('trainingModal')">Voltar</button>`);
+            }, 1500);
         }
 
-        // --- OUVINTES DE EVENTOS GLOBAIS ---
-        navLessonsBtn.addEventListener('click', () => switchView('lessons'));
-        navConversationBtn.addEventListener('click', () => switchView('conversation'));
-        navFlashcardsBtn.addEventListener('click', () => switchView('flashcards'));
-        navQuizBtn.addEventListener('click', () => switchView('quiz'));
-
-        lessonNavButtons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                currentLessonArea = e.target.dataset.section;
-                lessonNavButtons.forEach(btn => btn.classList.remove('active'));
-                e.target.classList.add('active');
-                loadLesson();
-            });
-        });
-
-        lessonContentArea.addEventListener('click', (event) => {
-            const target = event.target;
-            if (target.closest('.next-lesson-button')) loadLesson();
-            if (target.closest('.check-answer-button')) checkAnswerWithAI();
-            if (target.closest('.audio-button, .tts-button')) { 
-                const btn = target.closest('button');
-                const textToSpeak = btn.dataset.text;
-                if(textToSpeak) playAudio(textToSpeak, btn);
-            }
-            if (target.closest('.btn-explain-better')) { getBetterExplanation(); }
-        });
+        // --- Autoinspeção ---
+        function startRonda() { showView('inspectionModalBody', `<h4>Rondas Programadas</h4><div class="item-list"><div class="list-item" onclick="openRondaChecklist('Setor A')" style="flex-direction:row; justify-content:space-between"><strong>Ronda Semanal - Setor A</strong><span class="status-pending">Pendente</span></div><div class="list-item" style="flex-direction:row; justify-content:space-between"><strong>Ronda Diária</strong><span class="status-completed">Concluída</span></div></div><button class="sub-button tertiary" onclick="resetModal('inspectionModal')">Voltar</button>`); }
+        function openRondaChecklist(setor) {
+             showView('inspectionModalBody', `<h4>Ronda - ${setor}</h4><div class="process-flow"><div class="checklist-item"><input type="checkbox" id="ronda-1"><label for="ronda-1">Verificar limpeza do piso</label></div></div><button class="sub-button" onclick="resetModal('inspectionModal')">Finalizar Ronda</button>`);
+        }
+        function startBlitz() {
+            showView('inspectionModalBody', `<div class="loader">⚡ Iniciando Blitz Surpresa...</div>`);
+            setTimeout(() => {
+                showView('inspectionModalBody', `<h4>Blitz em Andamento</h4><div class="result-card" style="border-left-color: var(--vinci-rouge-logo);"><strong>Área Alvo:</strong> Expedição</div><button class="sub-button tertiary" onclick="resetModal('inspectionModal')">Voltar</button>`);
+            }, 1500);
+        }
         
-        levelSelect.addEventListener('change', () => {
-            if(currentLessonArea) loadLesson();
-        });
-
-        // Listeners para o módulo de conversação
-        convoLevelSelect.addEventListener('change', updateConvoThemes);
-        btnStartConvo.addEventListener('click', handleStartConversation);
-        btnSendConvo.addEventListener('click', () => {
-            const message = convoUserInput.value.trim();
-            if (message && !convoIsLoading) {
-                getAIResponse(message);
-                convoUserInput.value = '';
-            }
-        });
-        convoUserInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') btnSendConvo.click();
-        });
-        btnNewDialogue.addEventListener('click', () => {
-            convoArea.classList.add('hidden');
-            convoConfigPanel.classList.remove('hidden');
-        });
-        btnMic.addEventListener('click', () => {
-            if (convoIsLoading || isRecognizing) return;
-            try {
-                recognition.start();
-            } catch(e) {
-                console.error("Não foi possível iniciar o reconhecimento de voz: ", e);
-                convoUserInput.placeholder = 'Não foi possível iniciar o microfone.';
-            }
-        });
-        btnAnalyzeConvo.addEventListener('click', analyzeConversation);
-        
-        // Listeners para o módulo de flashcards
-        btnGenerateDeck.addEventListener('click', generateFlashcardDeckWithAI);
-        btnFlip.addEventListener('click', flipCard);
-        flashcardContainer.addEventListener('click', (e) => {
-            if (e.target.closest('.btn-example-sentence')) {
-                getExampleSentence(e);
-            } else if (!e.target.closest('button')) {
-                flipCard();
-            }
-        });
-        btnNext.addEventListener('click', nextCard);
-        btnPrev.addEventListener('click', prevCard);
-        btnCorrect.addEventListener('click', nextCard);
-        btnWrong.addEventListener('click', nextCard);
-        flashcardsView.addEventListener('click', (e) => {
-            if(e.target.closest('.tts-button')) {
-                const btn = e.target.closest('button');
-                playAudio(btn.dataset.text, btn);
-            }
-        });
-
-        // Listeners para o módulo de Quiz
-        btnGenerateQuiz.addEventListener('click', startQuiz);
-        quizArea.addEventListener('click', (e) => {
-            if (e.target.closest('.quiz-option-btn')) {
-                handleQuizAnswer(e.target.closest('.quiz-option-btn').dataset.option);
-            }
-            if (e.target.closest('#btn-next-question')) {
-                nextQuizQuestion();
-            }
-            if (e.target.closest('#btn-restart-quiz')) {
-                quizArea.classList.add('hidden');
-                document.getElementById('quiz-config-panel').classList.remove('hidden');
-            }
-        });
-        
-        // Iniciar a aplicação quando a página carregar
-        document.addEventListener('DOMContentLoaded', init);
+        window.onclick = (event) => { if (event.target.classList.contains('modal')) closeModal(event.target.id); };
+        document.addEventListener('keypress', (e) => { if (e.key === 'Enter' && document.getElementById('chatInterface')?.classList.contains('active')) sendMessage(); });
     </script>
 </body>
 </html>
