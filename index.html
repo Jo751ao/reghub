@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -16,10 +16,12 @@
             --vinci-vert: #009669;        
             --vinci-jaune: #E8E100;       
             --vinci-blanc: #FFFFFF;
-            --vinci-gris: #F1F4F9;
+            --vinci-gris: #F4F7FB; /* Mais claro para destacar cartões */
             --vinci-bleu-logo: #004489;   
             --vinci-rouge-logo: #E20025;
-            --shadow: 0 4px 20px rgba(5, 33, 69, 0.08);
+            --shadow-sm: 0 4px 15px rgba(5, 33, 69, 0.04);
+            --shadow-md: 0 10px 30px rgba(5, 33, 69, 0.08);
+            --shadow-lg: 0 20px 40px rgba(5, 33, 69, 0.15);
         }
 
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
@@ -30,355 +32,626 @@
             width: 100%; max-width: 414px; height: 100%; max-height: 896px; 
             background: var(--vinci-gris); position: relative; display: flex; flex-direction: column; overflow: hidden; 
         }
-        @media (min-width: 420px) { .phone-frame { border-radius: 40px; border: 10px solid #333; height: 95vh; box-shadow: 0 50px 100px rgba(0,0,0,0.5); } }
+        @media (min-width: 420px) { .phone-frame { border-radius: 44px; border: 12px solid #2A2D34; height: 95vh; box-shadow: 0 50px 100px rgba(0,0,0,0.5); } }
 
-        /* TELA LOGIN */
+        /* TELA LOGIN - Gradiente Animado */
         #loginScreen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--vinci-bleu-fonce); z-index: 2000;
-            display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 40px; text-align: center; color: white; transition: transform 0.5s ease-in-out;
+            background: linear-gradient(-45deg, var(--vinci-bleu-fonce), #0a3a6b, var(--vinci-bleu-logo), #051b3b);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            padding: 40px; text-align: center; color: white; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        .login-input { width: 100%; padding: 16px; margin-bottom: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.1); color: white; }
-        .login-btn { width: 100%; padding: 16px; border-radius: 12px; border: none; background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); font-weight: 800; cursor: pointer; }
+        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
+        .login-logo-container { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow-md); }
+        .login-input { width: 100%; padding: 18px 20px; margin-bottom: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 14px; backdrop-filter: blur(5px); transition: 0.3s; }
+        .login-input:focus { background: rgba(255,255,255,0.15); border-color: var(--vinci-bleu-clair); }
+        .login-input::placeholder { color: rgba(255,255,255,0.6); }
+        .login-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); font-weight: 800; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 8px 20px rgba(82, 193, 221, 0.3); }
+        .login-btn:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(82, 193, 221, 0.2); }
 
         /* INTERFACE PRINCIPAL */
-        #appInterface { display: none; flex-direction: column; height: 100%; opacity: 0; transition: opacity 0.5s; }
-        .status-bar { height: 40px; padding: 0 25px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; background: white; color: var(--vinci-bleu-fonce); }
-        .app-header { padding: 15px 25px 10px; background: white; display: flex; justify-content: space-between; align-items: center; }
-        .user-name { font-size: 20px; font-weight: 800; color: var(--vinci-bleu-fonce); }
+        #appInterface { display: none; flex-direction: column; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; }
+        .status-bar { height: 44px; padding: 0 25px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; background: var(--vinci-gris); color: var(--vinci-bleu-fonce); }
+        .app-header { padding: 10px 25px 15px; background: var(--vinci-gris); display: flex; justify-content: space-between; align-items: center; }
+        .user-name { font-size: 22px; font-weight: 800; color: var(--vinci-bleu-fonce); letter-spacing: -0.5px; }
+        .header-icon-btn { width: 44px; height: 44px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; box-shadow: var(--shadow-sm); position: relative; cursor: pointer; transition: 0.2s; }
+        .header-icon-btn:active { transform: scale(0.9); }
+        .badge-dot { position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; background: var(--vinci-rouge-logo); border-radius: 50%; }
 
         /* DASHBOARD SUMMARY */
-        .summary-card { margin: 15px 25px; padding: 20px; border-radius: 20px; background: linear-gradient(135deg, var(--vinci-bleu-fonce) 0%, #0a3a6b 100%); color: white; box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center; }
-        
+        .summary-card { 
+            margin: 10px 25px 20px; padding: 25px; border-radius: 24px; 
+            background: linear-gradient(135deg, var(--vinci-bleu-fonce) 0%, var(--vinci-bleu-logo) 100%); 
+            color: white; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center;
+            position: relative; overflow: hidden;
+        }
+        /* Efeito de círculos no fundo do cartão */
+        .summary-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
+        .summary-card::after { content: ''; position: absolute; bottom: -20px; left: 20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(82, 193, 221, 0.15) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
+
+        .progress-circle { position: relative; width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--vinci-vert) 98.5%, rgba(255,255,255,0.2) 0); display: flex; align-items: center; justify-content: center; }
+        .progress-circle::before { content: ''; position: absolute; width: 48px; height: 48px; background: var(--vinci-bleu-logo); border-radius: 50%; }
+        .progress-circle i { position: relative; z-index: 1; color: var(--vinci-vert); }
+
         /* MENU GRID */
-        .scroll-content { flex-grow: 1; padding: 10px 25px 100px; overflow-y: auto; scrollbar-width: none; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-        .card { background: white; border-radius: 20px; padding: 20px; height: 140px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: 0 4px 15px rgba(0,0,0,0.03); cursor: pointer; transition: 0.2s; border: 1px solid white; }
-        .card:active { transform: scale(0.97); border-color: var(--vinci-bleu-clair); }
-        .icon-box { width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 10px; font-size: 24px; }
+        .scroll-content { flex-grow: 1; padding: 0 25px 120px; overflow-y: auto; scrollbar-width: none; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .card { background: white; border-radius: 24px; padding: 22px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s; border: 1px solid rgba(0,0,0,0.02); }
+        .card:active { transform: scale(0.94); box-shadow: 0 2px 8px rgba(5, 33, 69, 0.05); }
+        .icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 10px; font-size: 24px; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
+        .card-title { font-weight: 800; font-size: 15px; color: var(--vinci-bleu-fonce); margin-bottom: 2px; }
+        .card-desc { font-size: 11px; color: #8898aa; font-weight: 500; line-height: 1.3; }
         
         /* BOTTOM NAV */
-        .bottom-nav { position: absolute; bottom: 20px; left: 20px; right: 20px; height: 70px; background: rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius: 20px; display: flex; justify-content: space-around; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); z-index: 90; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: #cbd5e0; cursor: pointer; transition: 0.3s; font-size: 20px; }
-        .nav-item.active { color: var(--vinci-bleu-fonce); transform: translateY(-2px); }
+        .bottom-nav { position: absolute; bottom: 25px; left: 25px; right: 25px; height: 75px; background: rgba(255,255,255,0.85); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: 24px; display: flex; justify-content: space-around; align-items: center; box-shadow: var(--shadow-lg); z-index: 90; border: 1px solid rgba(255,255,255,0.5); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #a0aec0; cursor: pointer; transition: 0.3s; position: relative; padding: 10px; }
+        .nav-item.active { color: var(--vinci-bleu-logo); transform: translateY(-3px); }
+        .nav-dot { width: 5px; height: 5px; background: var(--vinci-bleu-logo); border-radius: 50%; position: absolute; bottom: 0; opacity: 0; transition: 0.3s; transform: scale(0); }
+        .nav-item.active .nav-dot { opacity: 1; transform: scale(1); }
 
-        /* MODAIS (SHEETS) */
-        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 33, 69, 0.6); backdrop-filter: blur(4px); z-index: 100; }
-        .sheet { position: absolute; bottom: -100%; left: 0; width: 100%; background: #F8F9FA; border-top-left-radius: 30px; border-top-right-radius: 30px; transition: bottom 0.4s ease; z-index: 101; padding: 30px 25px; max-height: 92%; overflow-y: auto; }
-        .sheet.open { bottom: 0; }
-        .handle { width: 40px; height: 5px; background: #e2e8f0; border-radius: 10px; margin: -15px auto 25px; }
-
-        /* COMPONENTES UI */
-        .btn { background: var(--vinci-bleu-logo); color: white; border: none; padding: 16px; border-radius: 14px; width: 100%; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 68, 137, 0.2); }
-        .btn.sec { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; box-shadow: none; }
-        .btn.add { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); justify-content: center; margin-top: 15px; }
+        /* OVERLAY E MODAIS */
+        .overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 33, 69, 0.4); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); z-index: 100; transition: opacity 0.3s; }
         
-        /* Form Inspeção */
-        .form-label { font-size: 11px; font-weight: 800; color: #8898aa; margin-bottom: 8px; display: block; margin-top: 15px; text-transform: uppercase; }
-        .form-input { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; background: white; font-family: inherit; font-size: 14px; }
-        .photo-upload { border: 2px dashed #cbd5e0; border-radius: 16px; padding: 20px; text-align: center; background: white; color: #8898aa; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 5px; margin-bottom: 15px; transition: 0.2s; }
-        .photo-upload:active { background: #f0f9ff; border-color: var(--vinci-bleu-clair); color: var(--vinci-bleu-clair); }
+        /* Modais Deslizantes (Sheets) */
+        .sheet { position: absolute; bottom: -100%; left: 0; width: 100%; background: #F4F7FB; border-top-left-radius: 32px; border-top-right-radius: 32px; transition: bottom 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.1); z-index: 101; padding: 25px 25px 40px; max-height: 92%; overflow-y: auto; box-shadow: 0 -10px 40px rgba(0,0,0,0.15); }
+        .sheet.open { bottom: 0; }
+        .handle { width: 44px; height: 5px; background: #d1d5db; border-radius: 10px; margin: 0 auto 25px; }
 
-        /* Lista Dinâmica de Itens */
-        .inspection-list { margin-top: 20px; border-top: 1px solid #e2e8f0; padding-top: 15px; }
-        .added-item { background: white; padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--vinci-rouge-logo); box-shadow: 0 2px 5px rgba(0,0,0,0.05); display: flex; gap: 10px; align-items: center; }
-        .item-thumb { width: 40px; height: 40px; background: #eee; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 10px; font-weight: bold; }
+        /* Modais Centralizados */
+        .centered-modal-container { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 33, 69, 0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 200; justify-content: center; align-items: center; }
+        .centered-modal-container.open { display: flex; }
+        .centered-modal { background: white; width: 88%; max-width: 360px; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg); animation: popInSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        @keyframes popInSpring { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        
+        .c-modal-header { background: rgba(244, 247, 251, 0.5); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.03); }
+        .c-modal-title { font-weight: 800; font-size: 16px; color: var(--vinci-bleu-fonce); }
+        .c-modal-close { cursor: pointer; color: #8898aa; transition: 0.2s; background: #e2e8f0; border-radius: 50%; padding: 4px; }
+        .c-modal-close:active { transform: scale(0.8); background: #cbd5e0; }
+        .c-modal-body { padding: 24px; }
+        
+        .c-modal-btn { width: 100%; padding: 16px; display: flex; align-items: center; font-weight: 700; font-size: 14px; border: none; border-radius: 14px; margin-bottom: 12px; cursor: pointer; box-shadow: var(--shadow-sm); gap: 14px; transition: transform 0.1s, box-shadow 0.2s; }
+        .c-modal-btn:active { transform: scale(0.96); box-shadow: none; }
+        .c-btn-blue { background: linear-gradient(135deg, var(--vinci-bleu-fonce), var(--vinci-bleu-logo)); color: white; }
+        .c-btn-red { background: linear-gradient(135deg, var(--vinci-rouge-logo), #ff4d4d); color: white; }
+        .c-btn-outline { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; box-shadow: none; }
+        .c-modal-btn i { opacity: 0.9; }
+
+        /* BOTOES GERAIS */
+        .btn { background: var(--vinci-bleu-logo); color: white; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 68, 137, 0.2); transition: 0.2s; font-size: 15px; }
+        .btn:active { transform: scale(0.96); box-shadow: none; }
+        .btn.sec { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); }
+        .btn.add { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); margin-top: 15px; box-shadow: 0 8px 20px rgba(82, 193, 221, 0.2); }
+        
+        /* FORMULARIOS & UPLOAD */
+        .form-label { font-size: 11px; font-weight: 800; color: #8898aa; margin-bottom: 8px; display: block; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .form-input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: white; font-family: inherit; font-size: 14px; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
+        .form-input:focus { border-color: var(--vinci-bleu-clair); box-shadow: 0 0 0 3px rgba(82,193,221,0.1); }
+        
+        .photo-upload { border: 2px dashed #cbd5e0; border-radius: 20px; padding: 25px; text-align: center; background: white; color: #8898aa; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 15px; transition: 0.2s; }
+        .photo-upload:active { background: #f0f9ff; border-color: var(--vinci-bleu-clair); color: var(--vinci-bleu-clair); transform: scale(0.98); }
+
+        /* LISTA INSPECÃO */
+        .added-item { background: white; padding: 14px; border-radius: 16px; margin-bottom: 12px; border-left: 4px solid var(--vinci-rouge-logo); box-shadow: var(--shadow-sm); display: flex; gap: 12px; align-items: center; }
+        .item-thumb { width: 44px; height: 44px; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #94a3b8; }
         .item-content { flex: 1; }
-        .item-title { font-size: 13px; font-weight: 700; color: var(--vinci-bleu-fonce); display: block; }
-        .item-action { font-size: 11px; color: #666; }
+        .item-title { font-size: 14px; font-weight: 700; color: var(--vinci-bleu-fonce); display: block; margin-bottom: 2px; }
+        .item-action { font-size: 12px; color: #64748b; }
 
-        /* Stepper Auditoria */
-        .stepper { display: flex; justify-content: space-between; margin-bottom: 20px; position: relative; }
-        .stepper::before { content: ''; position: absolute; top: 15px; width: 100%; height: 2px; background: #e2e8f0; z-index: 0; }
-        .step { width: 32px; height: 32px; border-radius: 50%; background: white; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; z-index: 1; color: #ccc; }
-        .step.active { background: var(--vinci-bleu-logo); color: white; border-color: var(--vinci-bleu-logo); }
-
-        /* Agentes Grid */
-        .agent-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-        .agent-card { background: white; padding: 15px; border-radius: 16px; border: 1px solid #eee; text-align: left; cursor: pointer; }
-        .agent-card:active { border-color: var(--vinci-violet); background: #fdf5fa; }
-
-        /* Toast Notification */
-        #toast { position: absolute; top: 60px; left: 50%; transform: translateX(-50%); background: var(--vinci-vert); color: white; padding: 12px 24px; border-radius: 50px; font-size: 13px; font-weight: 700; display: none; z-index: 2000; box-shadow: 0 10px 20px rgba(0,0,0,0.15); animation: slideDown 0.3s ease; white-space: nowrap; }
-        @keyframes slideDown { from { top: 40px; opacity: 0; } to { top: 60px; opacity: 1; } }
+        /* CHAT INTERFACE */
+        .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; scrollbar-width: none; }
+        .msg { padding: 14px 18px; border-radius: 20px; font-size: 14px; max-width: 82%; line-height: 1.5; box-shadow: var(--shadow-sm); }
+        .msg-bot { background: white; border: 1px solid #f1f5f9; align-self: flex-start; border-bottom-left-radius: 4px; color: var(--vinci-bleu-fonce); }
+        .msg-user { background: linear-gradient(135deg, var(--vinci-bleu-logo), #005bb5); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+        
+        /* TOAST */
+        #toast { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); background: var(--vinci-bleu-fonce); color: white; padding: 14px 28px; border-radius: 50px; font-size: 13px; font-weight: 700; display: none; z-index: 3000; box-shadow: var(--shadow-lg); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); }
+        @keyframes slideDown { from { top: 20px; opacity: 0; transform: translate(-50%, -20px) scale(0.9); } to { top: 50px; opacity: 1; transform: translate(-50%, 0) scale(1); } }
     </style>
 </head>
 <body>
 
-    <div id="toast">Operação realizada com sucesso!</div>
-
     <div class="phone-frame">
+        <div id="toast">Operação realizada com sucesso!</div>
+
         <!-- TELA DE LOGIN -->
         <div id="loginScreen">
-            <div style="font-size:40px; margin-bottom:10px;">✈️</div>
-            <h1 style="font-size:28px; margin:0;">REGHUB AI</h1>
-            <p style="font-size:12px; opacity:0.7; margin-bottom:40px;">Vinci Airport Brazil</p>
-            <input type="text" class="login-input" placeholder="ID Corporativo" value="vinci.user">
-            <input type="password" class="login-input" placeholder="Palavra-passe" value="******">
-            <button class="login-btn" onclick="doLogin()">ACESSAR</button>
+            <div class="login-logo-container">
+                <i data-lucide="plane-takeoff" size="48" color="white"></i>
+            </div>
+            <h1 style="font-size:32px; margin:0 0 5px; letter-spacing: 1px;">REGHUB AI</h1>
+            <p style="font-size:12px; opacity:0.8; margin-bottom:45px; font-weight: 500; letter-spacing: 2px;">VINCI AIRPORTS BRAZIL</p>
+            
+            <div style="width: 100%; max-width: 300px;">
+                <input type="text" class="login-input" placeholder="ID Corporativo" value="joao.pedro">
+                <input type="password" class="login-input" placeholder="Palavra-passe" value="********">
+                <button class="login-btn" onclick="doLogin()">ACESSAR</button>
+            </div>
         </div>
 
         <!-- APP PRINCIPAL -->
         <div id="appInterface">
-            <div class="status-bar"><span></span><span>📶 100%</span></div>
+            <div class="status-bar"><span>09:41</span><span>📶 100%</span></div>
+            
             <header class="app-header">
-                <div><div style="font-size:12px; color:#888; font-weight:600;">Bem-vindo,</div><div class="user-name">João Pedro</div></div>
-                <div style="font-size:20px;">🔔</div>
+                <div>
+                    <div style="font-size:12px; color:#8898aa; font-weight:600; text-transform: uppercase; letter-spacing: 0.5px;">Bem-vindo de volta,</div>
+                    <div class="user-name">João Pedro</div>
+                </div>
+                <div class="header-icon-btn" onclick="showToast('Sem novas notificações')">
+                    <i data-lucide="bell" size="20" color="var(--vinci-bleu-fonce)"></i>
+                    <div class="badge-dot"></div>
+                </div>
             </header>
 
+            <div class="summary-card">
+                <div style="position: relative; z-index: 1;">
+                    <p style="margin:0 0 4px; font-size:12px; opacity:0.85; font-weight: 600;">Status Regulatório</p>
+                    <h3 style="margin:0; font-size:34px; letter-spacing: -1px;">98.5%</h3>
+                    <div style="font-size:12px; margin-top:8px; opacity:0.95; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; width: fit-content; backdrop-filter: blur(4px);">
+                        <i data-lucide="check-circle-2" size="14"></i> Operação Normal
+                    </div>
+                </div>
+                <div class="progress-circle">
+                    <i data-lucide="shield-check" size="28"></i>
+                </div>
+            </div>
+
             <main class="scroll-content">
-                <span style="font-size:13px; font-weight:800; color:var(--vinci-bleu-fonce); display:block; margin-bottom:15px;">MENU DE GESTÃO</span>
+                <span style="font-size:12px; font-weight:800; color:#8898aa; display:block; margin-bottom:16px; letter-spacing: 1px;">MÓDULOS DE GESTÃO</span>
                 <div class="grid">
                     <!-- AUDITORIA -->
-                    <div class="card" onclick="openModal('auditModal')">
+                    <div class="card" onclick="openCenteredModal('auditTypeModal')">
                         <div>
                             <div class="icon-box" style="background:var(--vinci-bleu-logo);"><i data-lucide="clipboard-list"></i></div>
-                            <div style="font-weight:800; font-size:15px;">Auditoria</div>
-                            <div style="font-size:11px; color:#888;">Simulação e fiscalização</div>
+                            <div class="card-title">Auditoria</div>
+                            <div class="card-desc">Simulação e fiscalização</div>
                         </div>
                     </div>
                     <!-- CHATBOT -->
-                    <div class="card" onclick="openModal('chatModal')">
+                    <div class="card" onclick="openCenteredModal('chatTypeModal')">
                         <div>
                             <div class="icon-box" style="background:var(--vinci-violet);"><i data-lucide="bot"></i></div>
-                            <div style="font-weight:800; font-size:15px;">Agentes IA</div>
-                            <div style="font-size:11px; color:#888;">4 Especialistas</div>
+                            <div class="card-title">Agentes IA</div>
+                            <div class="card-desc">4 Especialistas</div>
                         </div>
                     </div>
                     <!-- TREINAMENTO -->
-                    <div class="card" onclick="openModal('trainModal')">
+                    <div class="card" onclick="openCenteredModal('trainTypeModal')">
                         <div>
                             <div class="icon-box" style="background:var(--vinci-bleu-clair);"><i data-lucide="graduation-cap"></i></div>
-                            <div style="font-weight:800; font-size:15px;">Treinamento</div>
-                            <div style="font-size:11px; color:#888;">Diagnóstico 90d</div>
+                            <div class="card-title">Treinamento</div>
+                            <div class="card-desc">Diagnóstico 90d</div>
                         </div>
                     </div>
                     <!-- INSPEÇÃO -->
-                    <div class="card" onclick="openModal('inspectModal')">
+                    <div class="card" onclick="openCenteredModal('inspectTypeModal')">
                         <div>
                             <div class="icon-box" style="background:var(--vinci-vert);"><i data-lucide="scan-eye"></i></div>
-                            <div style="font-weight:800; font-size:15px;">Inspeção</div>
-                            <div style="font-size:11px; color:#888;">Ronda e Blitz</div>
+                            <div class="card-title">Autoinspeção</div>
+                            <div class="card-desc">Registos de Rondas</div>
                         </div>
                     </div>
                     <!-- INDICADORES -->
                     <div class="card" onclick="openPowerBI()" style="grid-column:span 2; height:90px; flex-direction:row; align-items:center; justify-content:flex-start;">
-                        <div class="icon-box" style="background:var(--vinci-rose); margin:0; margin-right:15px;"><i data-lucide="bar-chart-2"></i></div>
+                        <div class="icon-box" style="background:var(--vinci-rose); margin:0; margin-right:16px;"><i data-lucide="bar-chart-2"></i></div>
                         <div>
-                            <div style="font-weight:800; font-size:15px;">Indicadores (BI)</div>
-                            <div style="font-size:11px; color:#888;">Dashboard Externo</div>
+                            <div class="card-title">Indicadores</div>
+                            <div class="card-desc">Dashboard e KPIs</div>
                         </div>
-                        <div style="margin-left:auto; font-size:20px; color:#ddd;">›</div>
+                        <div style="margin-left:auto; color:#cbd5e0;"><i data-lucide="chevron-right"></i></div>
                     </div>
                 </div>
             </main>
 
+            <!-- NAVEGAÇÃO INFERIOR -->
             <nav class="bottom-nav">
-                <div class="nav-item active"><i data-lucide="home"></i></div>
-                <div class="nav-item" onclick="openModal('chatModal')"><i data-lucide="message-square"></i></div>
-                <div class="nav-item" onclick="openModal('inspectModal')"><i data-lucide="camera"></i></div>
-                <div class="nav-item"><span><i data-lucide="user"></i></span></div>
+                <div class="nav-item active">
+                    <i data-lucide="home"></i>
+                    <div class="nav-dot"></div>
+                </div>
+                <div class="nav-item" onclick="openCenteredModal('chatTypeModal')">
+                    <i data-lucide="bot"></i>
+                    <div class="nav-dot"></div>
+                </div>
             </nav>
         </div>
-    </div>
 
-    <!-- OVERLAY GERAL -->
-    <div class="overlay" id="overlay" onclick="closeAll()"></div>
+        <!-- OVERLAY GERAL PARA SHEETS E MODAIS -->
+        <div class="overlay" id="overlay" onclick="closeAll()"></div>
 
-    <!-- 1. MODAL AUDITORIA -->
-    <div class="sheet" id="auditModal">
-        <div class="handle"></div>
-        <h2 style="margin-top:0; color:var(--vinci-bleu-fonce);">Auditoria</h2>
+        <!-- ========================================== -->
+        <!-- MODAIS CENTRALIZADOS (SELEÇÃO)             -->
+        <!-- ========================================== -->
         
-        <div id="auditStart">
-            <button class="btn" onclick="startAuditWizard()">🚀 Iniciar Simulação</button>
-            <button class="btn sec" onclick="startFiscalizacao()">🏛️ Upload Documento Fiscal</button>
-        </div>
-
-        <!-- Wizard -->
-        <div id="auditWizard" style="display:none;">
-            <div class="stepper">
-                <div class="step active" id="st1">1</div>
-                <div class="step" id="st2">2</div>
-                <div class="step" id="st3">3</div>
-            </div>
-            <div id="auditStepContent">
-                <div style="text-align:center; padding:30px;">
-                    <i data-lucide="loader-2" class="animate-spin" style="margin-bottom:10px;"></i>
-                    <p>IA Gerando Checklist...</p>
+        <!-- MODAL AUDITORIA -->
+        <div class="centered-modal-container" id="auditTypeModal">
+            <div class="centered-modal">
+                <div class="c-modal-header">
+                    <span class="c-modal-title">Auditoria</span>
+                    <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('auditTypeModal')"></i>
+                </div>
+                <div class="c-modal-body">
+                    <button class="c-modal-btn c-btn-blue" onclick="startAuditWizardFromModal()">
+                        <i data-lucide="clipboard-check" size="20"></i> Simulação (Checklist)
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="startFiscalizacaoFromModal()">
+                        <i data-lucide="upload-cloud" size="20"></i> Fiscalização Oficial
+                    </button>
                 </div>
             </div>
         </div>
 
-        <!-- Fiscalização -->
-        <div id="auditFiscal" style="display:none;">
-            <div class="photo-upload" onclick="simulateUpload()">
-                <div style="font-size:30px;">📂</div>
-                <span style="font-size:12px; font-weight:600;">Toque para enviar PDF do Órgão</span>
+        <!-- MODAL AGENTES IA -->
+        <div class="centered-modal-container" id="chatTypeModal">
+            <div class="centered-modal">
+                <div class="c-modal-header">
+                    <span class="c-modal-title" style="color: var(--vinci-violet);">Agentes IA</span>
+                    <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('chatTypeModal')"></i>
+                </div>
+                <div class="c-modal-body">
+                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('Procedimentos')" style="border-left-color: var(--vinci-bleu-clair);">
+                        <i data-lucide="settings" size="20" color="var(--vinci-bleu-clair)"></i> Procedimentos Internos
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('MAPA')">
+                        <i data-lucide="wheat" size="20" color="#D97706"></i> Especialista MAPA
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('Anvisa')">
+                        <i data-lucide="pill" size="20" color="var(--vinci-rose)"></i> Especialista Anvisa
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('RFB')">
+                        <i data-lucide="landmark" size="20" color="var(--vinci-vert)"></i> Receita Federal
+                    </button>
+                </div>
             </div>
-            <div id="fiscalResult"></div>
-            <button class="btn sec" onclick="resetAudit()">Voltar</button>
-        </div>
-    </div>
-
-    <!-- 2. MODAL TREINAMENTO -->
-    <div class="sheet" id="trainModal">
-        <div class="handle"></div>
-        <h2 style="margin-top:0; color:var(--vinci-bleu-fonce);">Treinamento</h2>
-        
-        <div id="trainMain">
-            <button class="btn" onclick="runDiagnosis()">🔍 Diagnóstico Vencimento </button>
-            <button class="btn sec" onclick="showAttendance()">📝 Lista de Presença Digital</button>
-            <button class="btn sec" onclick="runEvaluation()">📊 Criar Avaliação</button>
         </div>
 
-        <div id="trainDiagnosis" style="display:none;">
-            <p style="font-weight:700; color:#888; font-size:12px;">DIAGNÓSTICO AUTOMÁTICO</p>
-            <div style="background:white; padding:15px; border-radius:16px; border:1px solid #eee; margin-bottom:10px;">
-                <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--vinci-bleu-fonce);"><span>João Silva</span><span style="color:var(--vinci-rouge-logo);">45 Dias</span></div>
-                <div style="font-size:11px; color:#666; margin-top:5px;">PTCA-301 • Cargas Perigosas</div>
-                <div style="width:100%; height:6px; background:#eee; margin-top:8px; border-radius:3px;"><div style="width:80%; height:100%; background:var(--vinci-rouge-logo); border-radius:3px;"></div></div>
+        <!-- MODAL TREINAMENTO -->
+        <div class="centered-modal-container" id="trainTypeModal">
+            <div class="centered-modal">
+                <div class="c-modal-header">
+                    <span class="c-modal-title" style="color: var(--vinci-bleu-clair);">Treinamento</span>
+                    <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('trainTypeModal')"></i>
+                </div>
+                <div class="c-modal-body">
+                    <button class="c-modal-btn c-btn-blue" onclick="runDiagnosisFromModal()" style="background: linear-gradient(135deg, var(--vinci-bleu-clair), #3b82f6); border:none;">
+                        <i data-lucide="search" size="20"></i> Diagnóstico de Vencimentos
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="showAttendanceFromModal()">
+                        <i data-lucide="users" size="20"></i> Lista de Presença Digital
+                    </button>
+                    <button class="c-modal-btn c-btn-outline" onclick="runEvaluationFromModal()">
+                        <i data-lucide="bar-chart-3" size="20"></i> Criar Avaliação
+                    </button>
+                </div>
             </div>
-            <div style="background:white; padding:15px; border-radius:16px; border:1px solid #eee; margin-bottom:20px;">
-                <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--vinci-bleu-fonce);"><span>Bruno Oliveira</span><span style="color:var(--vinci-jaune);">82 Dias</span></div>
-                <div style="font-size:11px; color:#666; margin-top:5px;">Empilhadeira • Direção</div>
-                <div style="width:100%; height:6px; background:#eee; margin-top:8px; border-radius:3px;"><div style="width:40%; height:100%; background:var(--vinci-jaune); border-radius:3px;"></div></div>
+        </div>
+
+        <!-- MODAL AUTOINSPEÇÃO -->
+        <div class="centered-modal-container" id="inspectTypeModal">
+            <div class="centered-modal">
+                <div class="c-modal-header">
+                    <span class="c-modal-title">Autoinspeção</span>
+                    <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('inspectTypeModal')"></i>
+                </div>
+                <div class="c-modal-body">
+                    <button class="c-modal-btn c-btn-blue" onclick="startInspectionFlow('Ronda Programada')">
+                        <i data-lucide="refresh-cw" size="20"></i> Ronda Programada
+                    </button>
+                    <button class="c-modal-btn c-btn-red" onclick="startInspectionFlow('Blitz Surpresa')">
+                        <i data-lucide="zap" size="20"></i> Blitz Surpresa
+                    </button>
+                </div>
             </div>
-            <button class="btn" style="background:var(--vinci-vert);" onclick="showToast('E-mails de Inscrição Enviados!'); closeAll();">📧 Inscrever Automaticamente</button>
-            <button class="btn sec" onclick="resetTrain()">Voltar</button>
         </div>
-    </div>
 
-    <!-- 3. MODAL AGENTES IA -->
-    <div class="sheet" id="chatModal">
-        <div class="handle"></div>
-        <h2 style="margin-top:0; color:var(--vinci-bleu-fonce);">Agentes Especialistas</h2>
-        <div id="agentSelect" class="agent-grid">
-            <div class="agent-card" onclick="initChat('Procedimentos')" style="background:#f0f9ff; border-color:var(--vinci-bleu-clair); grid-column: span 2;">
-                <div style="font-size:24px; margin-bottom:5px;">⚙️</div>
-                <div style="font-weight:800; font-size:14px; color:var(--vinci-bleu-fonce);">Procedimentos (POPs)</div>
-                <div style="font-size:10px; color:#666;">Manual de Operações Internas</div>
+        <!-- ========================================== -->
+        <!-- FOLHAS DESLIZANTES (SHEETS) BOTTOM UP      -->
+        <!-- ========================================== -->
+
+        <!-- 1. FOLHA AUDITORIA -->
+        <div class="sheet" id="auditModal">
+            <div class="handle"></div>
+            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Auditoria</h2>
+
+            <div id="auditWizard" style="display:none;">
+                <div class="stepper">
+                    <div class="step active" id="st1">1</div>
+                    <div class="step" id="st2">2</div>
+                    <div class="step" id="st3">3</div>
+                </div>
+                <div id="auditStepContent">
+                    <div style="text-align:center; padding:40px 20px;">
+                        <i data-lucide="loader-2" class="animate-spin" size="40" style="margin-bottom:15px; color:var(--vinci-bleu-clair);"></i>
+                        <p style="font-weight:600; color:#555;">IA a gerar o melhor checklist...</p>
+                    </div>
+                </div>
             </div>
-            <div class="agent-card" onclick="initChat('MAPA')"><div style="font-size:24px; margin-bottom:5px;">🌾</div><div style="font-weight:800; font-size:14px;">MAPA</div></div>
-            <div class="agent-card" onclick="initChat('Anvisa')"><div style="font-size:24px; margin-bottom:5px;">💊</div><div style="font-weight:800; font-size:14px;">Anvisa</div></div>
-            <div class="agent-card" onclick="initChat('RFB')"><div style="font-size:24px; margin-bottom:5px;">💰</div><div style="font-weight:800; font-size:14px;">RFB</div></div>
-        </div>
-        <div id="chatInterface" style="display:none; height:400px; flex-direction:column;">
-            <div id="chatBox" style="flex-grow:1; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:12px; margin-bottom:10px;"></div>
-            <div style="display:flex; gap:10px;">
-                <input type="text" id="chatInput" placeholder="Sua dúvida..." style="flex:1; padding:12px; border-radius:12px; border:1px solid #ddd;">
-                <button onclick="sendMsg()" style="background:var(--vinci-bleu-logo); color:white; border:none; border-radius:12px; padding:0 15px;">➤</button>
+
+            <div id="auditFiscal" style="display:none;">
+                <div class="photo-upload" onclick="simulateUpload()">
+                    <i data-lucide="file-text" size="36" color="var(--vinci-bleu-clair)"></i>
+                    <span style="font-size:13px; font-weight:700; color:var(--vinci-bleu-fonce);">Toque para carregar PDF do Órgão</span>
+                    <span style="font-size:11px;">A IA irá extrair as não conformidades.</span>
+                </div>
+                <div id="fiscalResult"></div>
+                <button class="btn sec" onclick="closeAll()">Cancelar</button>
             </div>
-            <button onclick="resetChat()" style="margin-top:10px; background:none; border:none; color:#888; width:100%; font-size:11px;">Trocar Agente</button>
-        </div>
-    </div>
-
-    <!-- 4. MODAL INSPEÇÃO (Multi-Itens) -->
-    <div class="sheet" id="inspectModal">
-        <div class="handle"></div>
-        <h2 style="margin-top:0; color:var(--vinci-bleu-fonce);">Inspeção de Campo</h2>
-        
-        <div style="display:flex; gap:10px; margin-bottom:15px;">
-            <button class="btn sec" style="padding:10px; margin:0; flex:1; font-size:12px;" onclick="setType(this)">Ronda Programada</button>
-            <button class="btn sec" style="padding:10px; margin:0; flex:1; font-size:12px;" onclick="setType(this)">Blitz Surpresa</button>
         </div>
 
-        <!-- Adição de Item -->
-        <div class="photo-upload" onclick="document.getElementById('fileInput').click()">
-            <i data-lucide="camera" size="24"></i>
-            <span style="font-size:12px; font-weight:600;">Adicionar Foto da Evidência</span>
-            <input type="file" id="fileInput" style="display:none;">
+        <!-- 2. FOLHA TREINAMENTO -->
+        <div class="sheet" id="trainModal">
+            <div class="handle"></div>
+            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Treinamento</h2>
+
+            <div id="trainDiagnosis" style="display:none;">
+                <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 15px; letter-spacing: 1px;">DIAGNÓSTICO: 90 DIAS</p>
+                <div style="background:white; padding:18px; border-radius:20px; border:1px solid #e2e8f0; margin-bottom:12px; box-shadow:var(--shadow-sm);">
+                    <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--vinci-bleu-fonce);"><span>João Silva</span><span style="color:var(--vinci-rouge-logo); font-size: 13px;">45 Dias</span></div>
+                    <div style="font-size:12px; color:#64748b; margin-top:6px; font-weight: 500;">PTCA-301 • Cargas Perigosas</div>
+                    <div style="width:100%; height:6px; background:#f1f5f9; margin-top:12px; border-radius:4px;"><div style="width:80%; height:100%; background:var(--vinci-rouge-logo); border-radius:4px;"></div></div>
+                </div>
+                <div style="background:white; padding:18px; border-radius:20px; border:1px solid #e2e8f0; margin-bottom:24px; box-shadow:var(--shadow-sm);">
+                    <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--vinci-bleu-fonce);"><span>Bruno Oliveira</span><span style="color:var(--vinci-jaune); font-size: 13px;">82 Dias</span></div>
+                    <div style="font-size:12px; color:#64748b; margin-top:6px; font-weight: 500;">Empilhadeira • Condução</div>
+                    <div style="width:100%; height:6px; background:#f1f5f9; margin-top:12px; border-radius:4px;"><div style="width:40%; height:100%; background:var(--vinci-jaune); border-radius:4px;"></div></div>
+                </div>
+                <button class="btn" style="background:var(--vinci-vert);" onclick="showToast('Convites enviados com sucesso!'); closeAll();">
+                    Inscrever e Notificar
+                </button>
+            </div>
         </div>
 
-        <label class="form-label">NÃO CONFORMIDADE ENCONTRADA</label>
-        <textarea id="ncInput" class="form-input" rows="2" placeholder="Ex: Extintor vencido..."></textarea>
-
-        <label class="form-label">AÇÃO IMEDIATA REALIZADA</label>
-        <textarea id="actionInput" class="form-input" rows="2" placeholder="Ex: Área isolada..." style="border-left:4px solid var(--vinci-vert); background:#f0fdf4;"></textarea>
-
-        <button class="btn add" onclick="addInspectionItem()">+ Adicionar Item à Lista</button>
-
-        <!-- Lista -->
-        <div id="inspectionList" class="inspection-list" style="display:none;">
-            <span style="font-size:11px; font-weight:800; color:#888; margin-bottom:10px; display:block;">ITENS REGISTADOS:</span>
+        <!-- 3. FOLHA CHATBOT -->
+        <div class="sheet" id="chatModal">
+            <div class="handle"></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
+                <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 20px;" id="chatTitle">Assistente IA</h2>
+                <button onclick="closeAll(); openCenteredModal('chatTypeModal')" style="background:#e2e8f0; border:none; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; color:#475569;">Trocar</button>
+            </div>
+            
+            <div id="chatInterface" style="height:55vh; max-height:450px; flex-direction:column; display:flex;">
+                <div id="chatBox" class="chat-box"></div>
+                <div style="display:flex; gap:10px; background: white; padding: 10px; border-radius: 20px; box-shadow: var(--shadow-sm); border: 1px solid #f1f5f9;">
+                    <input type="text" id="chatInput" placeholder="Mensagem..." style="flex:1; border:none; background:transparent; font-size: 14px; font-family: inherit; padding-left: 5px;">
+                    <button onclick="sendMsg()" style="background:var(--vinci-bleu-logo); color:white; border:none; border-radius:14px; width:44px; height:44px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.2s;"><i data-lucide="send" size="18"></i></button>
+                </div>
+            </div>
         </div>
 
-        <button class="btn" style="margin-top:20px; background:var(--vinci-rouge-logo);" onclick="showToast('Relatório Finalizado e Enviado!'); closeAll();">💾 Finalizar Relatório</button>
+        <!-- 4. FOLHA INSPEÇÃO (FORMULÁRIO MULTI-ITEM) -->
+        <div class="sheet" id="inspectFormModal">
+            <div class="handle"></div>
+            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Inspeção de Campo</h2>
+            
+            <div style="background: white; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
+                <span style="color: #64748b;">OPERAÇÃO</span>
+                <span id="inspectionTypeLabel" style="color: var(--vinci-bleu-logo);">Ronda Programada</span>
+            </div>
+
+            <div class="photo-upload" onclick="document.getElementById('fileInput').click()">
+                <i data-lucide="camera" size="28" color="var(--vinci-bleu-clair)"></i>
+                <span style="font-size:13px; font-weight:700; color: var(--vinci-bleu-fonce);">Adicionar Evidência Fotográfica</span>
+                <input type="file" id="fileInput" style="display:none;">
+            </div>
+
+            <label class="form-label">Registo da Anomalia</label>
+            <textarea id="ncInput" class="form-input" rows="2" placeholder="Descreva o problema encontrado..."></textarea>
+
+            <label class="form-label">Ação Corretiva Imediata</label>
+            <textarea id="actionInput" class="form-input" rows="2" placeholder="Ex: Zona isolada temporariamente..." style="border-left:4px solid var(--vinci-vert); background:#f0fdf4;"></textarea>
+
+            <button class="btn add" onclick="addInspectionItem()">
+                <i data-lucide="plus-circle" size="18" style="margin-right: 8px;"></i> Adicionar Item
+            </button>
+
+            <!-- Lista de Evidências Adicionadas -->
+            <div id="inspectionList" class="inspection-list" style="display:none;">
+                <span style="font-size:11px; font-weight:800; color:#8898aa; margin-bottom:12px; display:block; letter-spacing: 1px;">ITENS REGISTADOS NESTA SESSÃO:</span>
+            </div>
+
+            <button class="btn" style="margin-top:25px; background:var(--vinci-bleu-fonce);" onclick="showToast('Relatório Submetido e Assinado!'); closeAll();">
+                Finalizar Relatório
+            </button>
+        </div>
     </div>
 
     <script>
+        // Inicializar ícones do Lucide
         lucide.createIcons();
 
+        /* --- NAVEGAÇÃO E SISTEMA --- */
         function doLogin() {
             document.getElementById('loginScreen').style.transform = 'translateY(-100%)';
-            setTimeout(() => { document.getElementById('loginScreen').style.display='none'; document.getElementById('appInterface').style.display='flex'; setTimeout(() => document.getElementById('appInterface').style.opacity='1', 50); }, 400);
+            setTimeout(() => { 
+                document.getElementById('loginScreen').style.display='none'; 
+                document.getElementById('appInterface').style.display='flex'; 
+                setTimeout(() => document.getElementById('appInterface').style.opacity='1', 50); 
+            }, 500);
         }
-        function showToast(m) { const t=document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none',3000); }
-        function openModal(id) { document.getElementById('overlay').style.display='block'; document.getElementById(id).classList.add('open'); }
-        function closeAll() { document.getElementById('overlay').style.display='none'; document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open')); }
-        function openPowerBI() { window.open('https://powerbi.microsoft.com','_blank'); showToast('A abrir Power BI...'); }
+        
+        function showToast(m) { 
+            const t = document.getElementById('toast'); 
+            t.innerText = m; 
+            t.style.display = 'block'; 
+            setTimeout(() => t.style.display = 'none', 3500); 
+        }
+        
+        function openModal(id) { 
+            document.getElementById('overlay').style.display = 'block'; 
+            document.getElementById('overlay').style.opacity = '1';
+            document.getElementById(id).classList.add('open'); 
+        }
+        
+        function closeAll() { 
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
+            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open')); 
+        }
+        
+        function openPowerBI() { 
+            window.open('https://powerbi.microsoft.com','_blank'); 
+            showToast('A redirecionar para o Power BI...'); 
+        }
 
-        /* LÓGICA INSPEÇÃO MULTIPLA */
-        function setType(btn) { document.querySelectorAll('.sheet#inspectModal .btn.sec').forEach(b => { b.style.background='white'; b.style.color='#052145'; }); btn.style.background = '#052145'; btn.style.color = 'white'; }
+        /* --- MODAIS CENTRALIZADOS (SELEÇÃO) --- */
+        function openCenteredModal(id) {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('overlay').style.opacity = '1';
+            document.getElementById(id).classList.add('open');
+        }
+
+        function closeCenteredModal(id) {
+            document.getElementById(id).classList.remove('open');
+            document.getElementById('overlay').style.opacity = '0';
+            setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
+        }
+
+        /* LIGAÇÕES DOS MODAIS CENTRAIS PARA AS FOLHAS (SHEETS) */
+        function startAuditWizardFromModal() {
+            document.getElementById('auditTypeModal').classList.remove('open');
+            openModal('auditModal');
+            startAuditWizard();
+        }
+
+        function startFiscalizacaoFromModal() {
+            document.getElementById('auditTypeModal').classList.remove('open');
+            openModal('auditModal');
+            startFiscalizacao();
+        }
+
+        function initChatFromModal(agent) {
+            document.getElementById('chatTypeModal').classList.remove('open');
+            openModal('chatModal');
+            initChat(agent);
+        }
+
+        function runDiagnosisFromModal() {
+            document.getElementById('trainTypeModal').classList.remove('open');
+            openModal('trainModal');
+            runDiagnosis();
+        }
+
+        function showAttendanceFromModal() { closeCenteredModal('trainTypeModal'); showToast('A abrir Lista de Presenças...'); }
+        function runEvaluationFromModal() { closeCenteredModal('trainTypeModal'); showToast('A gerar link da Avaliação...'); }
+
+        /* --- LÓGICA INSPEÇÃO MULTI-ITEM --- */
+        function startInspectionFlow(type) {
+            document.getElementById('inspectTypeModal').classList.remove('open');
+            document.getElementById('inspectionTypeLabel').innerText = type.toUpperCase();
+            
+            if (type === 'Blitz Surpresa') {
+                document.getElementById('inspectionTypeLabel').style.color = 'var(--vinci-rouge-logo)';
+            } else {
+                document.getElementById('inspectionTypeLabel').style.color = 'var(--vinci-bleu-logo)';
+            }
+            
+            openModal('inspectFormModal');
+        }
         
         function addInspectionItem() {
             const nc = document.getElementById('ncInput').value;
-            if(!nc) { showToast('Descreva a Não Conformidade'); return; }
+            if(!nc) { showToast('Por favor, descreva a anomalia primeiro.'); return; }
+            
             document.getElementById('inspectionList').style.display = 'block';
             document.getElementById('inspectionList').innerHTML += `
                 <div class="added-item">
-                    <div class="item-thumb"><i data-lucide="image"></i></div>
-                    <div class="item-content"><span class="item-title">${nc}</span><span class="item-action">Ação: ${document.getElementById('actionInput').value || 'Pendente'}</span></div>
+                    <div class="item-thumb"><i data-lucide="image" size="20"></i></div>
+                    <div class="item-content">
+                        <span class="item-title">${nc}</span>
+                        <span class="item-action">Ação: ${document.getElementById('actionInput').value || 'Aguardar intervenção'}</span>
+                    </div>
                 </div>`;
-            lucide.createIcons();
-            document.getElementById('ncInput').value = ''; document.getElementById('actionInput').value = '';
-            showToast('Item adicionado!');
+            
+            lucide.createIcons(); // Recarrega os icones do novo elemento
+            document.getElementById('ncInput').value = ''; 
+            document.getElementById('actionInput').value = '';
+            showToast('Evidência gravada com sucesso!');
         }
 
-        /* LÓGICA AUDITORIA */
+        /* --- LÓGICA AUDITORIA WIZARD --- */
         function startAuditWizard() {
-            document.getElementById('auditStart').style.display = 'none'; document.getElementById('auditWizard').style.display = 'block';
+            document.getElementById('auditWizard').style.display = 'block';
+            document.getElementById('auditFiscal').style.display = 'none';
+            document.getElementById('auditStepContent').innerHTML = `
+                <div style="text-align:center; padding:40px 20px;">
+                    <i data-lucide="loader-2" class="animate-spin" style="margin-bottom:15px; color:var(--vinci-bleu-clair); width: 40px; height: 40px; display:inline-block;"></i>
+                    <p style="font-weight:600; color:#555;">IA a gerar o melhor checklist...</p>
+                </div>`;
+            lucide.createIcons();
+
             setTimeout(() => {
                 document.getElementById('st2').classList.add('active');
                 document.getElementById('auditStepContent').innerHTML = `
-                    <h4 style="margin:0 0 15px 0;">Checklist (Almoxarifado)</h4>
-                    <label style="display:flex; gap:10px; padding:10px; background:white; border-radius:10px; margin-bottom:10px; border:1px solid #eee;"><input type="checkbox" checked> Limpeza</label>
-                    <label style="display:flex; gap:10px; padding:10px; background:white; border-radius:10px; margin-bottom:10px; border:1px solid #eee;"><input type="checkbox"> Extintores</label>
-                    <button class="btn" onclick="finishAuditWizard()">Concluir</button>`;
-            }, 1000);
+                    <h4 style="margin:0 0 15px 0; color:var(--vinci-bleu-fonce);">Checklist Gerado (Almoxarifado)</h4>
+                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Limpeza e integridade do piso</label>
+                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:20px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Validade dos extintores visível</label>
+                    <button class="btn" onclick="finishAuditWizard()">Validar Inspeção</button>`;
+            }, 1200);
         }
         function finishAuditWizard() {
             document.getElementById('st3').classList.add('active');
-            document.getElementById('auditStepContent').innerHTML = `<div style="background:#fff1f2; color:#be123c; padding:15px; border-radius:12px; font-size:13px; margin-bottom:15px;"><strong>1 Não Conformidade</strong><br>Ação: Manutenção.</div><button class="btn" onclick="closeAll(); showToast('Plano de Ação Criado!')">Finalizar</button>`;
+            document.getElementById('auditStepContent').innerHTML = `
+                <div style="background:#fff1f2; color:#be123c; padding:20px; border-radius:16px; font-size:14px; margin-bottom:20px; border: 1px solid #fecdd3;">
+                    <strong style="font-size:16px; display:block; margin-bottom:5px;">1 Não Conformidade Encontrada</strong>
+                    Ação sugerida: Abertura automática de ticket de manutenção.
+                </div>
+                <button class="btn" onclick="closeAll(); showToast('Plano de Ação submetido!')">Concluir Auditoria</button>`;
         }
-        function startFiscalizacao() { document.getElementById('auditStart').style.display = 'none'; document.getElementById('auditFiscal').style.display = 'block'; }
-        function simulateUpload() { showToast('Analisando...'); setTimeout(() => { document.getElementById('fiscalResult').innerHTML = `<div class="fiscal-result" style="background:#fff; padding:20px; border-radius:16px; border-left:5px solid var(--vinci-rouge-logo); box-shadow:0 4px 15px rgba(0,0,0,0.05); margin-top:15px;"><strong>Análise IA:</strong><br><span style="font-size:13px;">Doc: <em>Notificação 002/24</em></span><ul style="font-size:12px; padding-left:20px; color:#555;"><li>Temperatura inadequada</li><li>Prazo: 5 dias</li></ul></div>`; }, 1500); }
-        function resetAudit() { document.getElementById('auditStart').style.display = 'block'; document.getElementById('auditWizard').style.display = 'none'; document.getElementById('auditFiscal').style.display = 'none'; document.getElementById('fiscalResult').innerHTML = ''; }
+        function startFiscalizacao() { 
+            document.getElementById('auditWizard').style.display = 'none';
+            document.getElementById('auditFiscal').style.display = 'block'; 
+            document.getElementById('fiscalResult').innerHTML = '';
+        }
+        function simulateUpload() { 
+            showToast('IA a processar documento...'); 
+            setTimeout(() => { 
+                document.getElementById('fiscalResult').innerHTML = `
+                    <div style="background:white; padding:20px; border-radius:16px; border-left:5px solid var(--vinci-rouge-logo); box-shadow:var(--shadow-sm); margin-top:15px;">
+                        <strong style="color:var(--vinci-bleu-fonce); font-size:15px;">Sumário Extraído (IA):</strong><br>
+                        <span style="font-size:13px; color:#666; margin-top:6px; display:block;">Referência: <em>Notificação ANVISA 002/24</em></span>
+                        <ul style="font-size:13px; padding-left:20px; color:#444; margin-top:10px;">
+                            <li>Temperatura de câmara inadequada</li>
+                            <li><strong>Prazo Legal:</strong> 5 dias úteis</li>
+                        </ul>
+                    </div>`; 
+            }, 1800); 
+        }
+        function resetAudit() { 
+            closeAll(); 
+            setTimeout(() => { document.getElementById('st2').classList.remove('active'); document.getElementById('st3').classList.remove('active'); }, 300);
+        }
 
-        /* TREINAMENTO */
-        function runDiagnosis() { document.getElementById('trainMain').style.display = 'none'; document.getElementById('trainDiagnosis').style.display = 'block'; }
-        function resetTrain() { document.getElementById('trainMain').style.display = 'block'; document.getElementById('trainDiagnosis').style.display = 'none'; }
-        function showAttendance() { showToast('Lista Gerada'); }
-        function runEvaluation() { showToast('Link Criado'); }
+        /* --- LÓGICA TREINAMENTO --- */
+        function runDiagnosis() { document.getElementById('trainDiagnosis').style.display = 'block'; }
 
-        /* CHAT */
+        /* --- LÓGICA CHATBOT --- */
         let currentAgent = '';
         function initChat(agent) {
-            currentAgent = agent; document.getElementById('agentSelect').style.display = 'none'; document.getElementById('chatInterface').style.display = 'flex';
-            document.getElementById('chatBox').innerHTML = `<div class="msg msg-bot">Olá! Sou o especialista em <b>${agent}</b>.</div>`;
+            currentAgent = agent; 
+            document.getElementById('chatTitle').innerText = "Agente: " + agent;
+            document.getElementById('chatInterface').style.display = 'flex';
+            document.getElementById('chatBox').innerHTML = `<div class="msg msg-bot">Olá! Sou o especialista certificado da base de dados de <b>${agent}</b>. Como posso ajudá-lo hoje?</div>`;
         }
-        function resetChat() { document.getElementById('agentSelect').style.display = 'grid'; document.getElementById('chatInterface').style.display = 'none'; }
         function sendMsg() {
-            const i = document.getElementById('chatInput'); if(!i.value) return;
-            const b = document.getElementById('chatBox'); b.innerHTML += `<div class="msg msg-user">${i.value}</div>`;
+            const i = document.getElementById('chatInput'); 
+            if(!i.value) return;
+            const b = document.getElementById('chatBox'); 
+            b.innerHTML += `<div class="msg msg-user">${i.value}</div>`;
             const v = i.value; i.value = '';
+            
+            // Scroll to bottom after user message
+            b.scrollTop = b.scrollHeight;
+
             setTimeout(() => {
-                let r = `Consultando base ${currentAgent}...`;
-                if(currentAgent === 'Procedimentos') r = `Conforme o POP Interno, para "${v}" deve seguir o fluxo de conferência dupla.`;
+                let r = `A pesquisar nos regulamentos de ${currentAgent}...`;
+                if(currentAgent === 'Procedimentos') r = `De acordo com o nosso Manual Interno (POP), a ação "${v}" requer validação de supervisor de turno.`;
+                else r = `Analisando a legislação do ${currentAgent}, o procedimento "${v}" está atualmente em conformidade, sujeito a revisão semestral.`;
                 b.innerHTML += `<div class="msg msg-bot">${r}</div>`;
                 b.scrollTop = b.scrollHeight;
-            }, 1000);
+            }, 1200);
         }
     </script>
 </body>
