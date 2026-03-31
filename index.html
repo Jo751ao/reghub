@@ -16,7 +16,7 @@
             --vinci-vert: #009669;        
             --vinci-jaune: #E8E100;       
             --vinci-blanc: #FFFFFF;
-            --vinci-gris: #F4F7FB; /* Mais claro para destacar cartões */
+            --vinci-gris: #F4F7FB; 
             --vinci-bleu-logo: #004489;   
             --vinci-rouge-logo: #E20025;
             --shadow-sm: 0 4px 15px rgba(5, 33, 69, 0.04);
@@ -34,23 +34,13 @@
         }
         @media (min-width: 420px) { .phone-frame { border-radius: 44px; border: 12px solid #2A2D34; height: 95vh; box-shadow: 0 50px 100px rgba(0,0,0,0.5); } }
 
-        /* TELA LOGIN - Gradiente Animado */
+        /* TELA LOGIN / SPLASH SCREEN */
         #loginScreen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(-45deg, var(--vinci-bleu-fonce), #0a3a6b, var(--vinci-bleu-logo), #051b3b);
-            background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            background: white;
             z-index: 2000; display: flex; flex-direction: column; justify-content: center; align-items: center;
-            padding: 40px; text-align: center; color: white; transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            padding: 40px; text-align: center; color: var(--vinci-bleu-fonce); transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
         }
-        @keyframes gradientBG { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
-        
-        .login-logo-container { background: rgba(255,255,255,0.1); padding: 20px; border-radius: 24px; margin-bottom: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); box-shadow: var(--shadow-md); }
-        .login-input { width: 100%; padding: 18px 20px; margin-bottom: 15px; border-radius: 16px; border: 1px solid rgba(255,255,255,0.15); background: rgba(255,255,255,0.08); color: white; font-size: 14px; backdrop-filter: blur(5px); transition: 0.3s; }
-        .login-input:focus { background: rgba(255,255,255,0.15); border-color: var(--vinci-bleu-clair); }
-        .login-input::placeholder { color: rgba(255,255,255,0.6); }
-        .login-btn { width: 100%; padding: 18px; border-radius: 16px; border: none; background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); font-weight: 800; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; font-size: 15px; letter-spacing: 0.5px; box-shadow: 0 8px 20px rgba(82, 193, 221, 0.3); }
-        .login-btn:active { transform: scale(0.96); box-shadow: 0 4px 10px rgba(82, 193, 221, 0.2); }
 
         /* INTERFACE PRINCIPAL */
         #appInterface { display: none; flex-direction: column; height: 100%; opacity: 0; transition: opacity 0.6s ease-in-out; }
@@ -61,31 +51,29 @@
         .header-icon-btn:active { transform: scale(0.9); }
         .badge-dot { position: absolute; top: 10px; right: 12px; width: 8px; height: 8px; background: var(--vinci-rouge-logo); border-radius: 50%; }
 
-        /* DASHBOARD SUMMARY */
-        .summary-card { 
-            margin: 10px 25px 20px; padding: 25px; border-radius: 24px; 
-            background: linear-gradient(135deg, var(--vinci-bleu-fonce) 0%, var(--vinci-bleu-logo) 100%); 
-            color: white; box-shadow: var(--shadow-md); display: flex; justify-content: space-between; align-items: center;
-            position: relative; overflow: hidden;
-        }
-        /* Efeito de círculos no fundo do cartão */
-        .summary-card::before { content: ''; position: absolute; top: -30px; right: -30px; width: 120px; height: 120px; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
-        .summary-card::after { content: ''; position: absolute; bottom: -20px; left: 20px; width: 80px; height: 80px; background: radial-gradient(circle, rgba(82, 193, 221, 0.15) 0%, rgba(255,255,255,0) 70%); border-radius: 50%; }
-
-        .progress-circle { position: relative; width: 60px; height: 60px; border-radius: 50%; background: conic-gradient(var(--vinci-vert) 98.5%, rgba(255,255,255,0.2) 0); display: flex; align-items: center; justify-content: center; }
-        .progress-circle::before { content: ''; position: absolute; width: 48px; height: 48px; background: var(--vinci-bleu-logo); border-radius: 50%; }
-        .progress-circle i { position: relative; z-index: 1; color: var(--vinci-vert); }
-
-        /* MENU GRID */
-        .scroll-content { flex-grow: 1; padding: 0 25px 120px; overflow-y: auto; scrollbar-width: none; }
+        /* MENU GRID (Cartões Principais) */
+        .scroll-content { flex-grow: 1; padding: 20px 25px 120px; overflow-y: auto; scrollbar-width: none; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-        .card { background: white; border-radius: 24px; padding: 22px; height: 150px; display: flex; flex-direction: column; justify-content: space-between; box-shadow: var(--shadow-sm); cursor: pointer; transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s; border: 1px solid rgba(0,0,0,0.02); }
+        .card { 
+            background: white; 
+            border-radius: 20px; 
+            padding: 20px; 
+            height: 150px; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: space-between; 
+            box-shadow: var(--shadow-sm); 
+            cursor: pointer; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s; 
+            border: 1px solid #e2e8f0;
+            overflow: hidden;
+        }
         .card:active { transform: scale(0.94); box-shadow: 0 2px 8px rgba(5, 33, 69, 0.05); }
         .icon-box { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 10px; font-size: 24px; box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
         .card-title { font-weight: 800; font-size: 15px; color: var(--vinci-bleu-fonce); margin-bottom: 2px; }
         .card-desc { font-size: 11px; color: #8898aa; font-weight: 500; line-height: 1.3; }
         
-        /* BOTTOM NAV - Bolinhas Flutuantes */
+        /* BOTTOM NAV */
         .bottom-nav { position: absolute; bottom: 25px; left: 25px; right: 25px; height: 70px; display: flex; justify-content: center; gap: 30px; align-items: center; z-index: 90; background: transparent; box-shadow: none; border: none; backdrop-filter: none; -webkit-backdrop-filter: none; pointer-events: none; }
         .nav-item { pointer-events: auto; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; background: rgba(255,255,255,0.9); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 50%; color: #8898aa; cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: var(--shadow-md); border: 1px solid rgba(255,255,255,0.6); }
         .nav-item:active { transform: scale(0.9); }
@@ -102,7 +90,7 @@
         /* Modais Centralizados */
         .centered-modal-container { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 33, 69, 0.5); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); z-index: 200; justify-content: center; align-items: center; }
         .centered-modal-container.open { display: flex; }
-        .centered-modal { background: white; width: 88%; max-width: 360px; border-radius: 24px; overflow: hidden; box-shadow: var(--shadow-lg); animation: popInSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .centered-modal { background: white; width: 88%; max-width: 360px; border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-lg); animation: popInSpring 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
         @keyframes popInSpring { 0% { transform: scale(0.8); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
         
         .c-modal-header { background: rgba(244, 247, 251, 0.5); padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.03); }
@@ -111,19 +99,57 @@
         .c-modal-close:active { transform: scale(0.8); background: #cbd5e0; }
         .c-modal-body { padding: 24px; }
         
-        .c-modal-btn { width: 100%; padding: 16px; display: flex; align-items: center; font-weight: 700; font-size: 14px; border: none; border-radius: 14px; margin-bottom: 12px; cursor: pointer; box-shadow: var(--shadow-sm); gap: 14px; transition: transform 0.1s, box-shadow 0.2s; }
-        .c-modal-btn:active { transform: scale(0.96); box-shadow: none; }
-        .c-btn-blue { background: linear-gradient(135deg, var(--vinci-bleu-fonce), var(--vinci-bleu-logo)); color: white; }
-        .c-btn-red { background: linear-gradient(135deg, var(--vinci-rouge-logo), #ff4d4d); color: white; }
-        .c-btn-outline { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; box-shadow: none; }
-        .c-modal-btn i { opacity: 0.9; }
+        /* ESTILO DOS BOTÕES DOS POP-UPS */
+        .c-modal-btn { 
+            width: 100%; 
+            padding: 16px; 
+            display: flex; 
+            align-items: center; 
+            font-weight: 700; 
+            font-size: 15px; 
+            background: white;
+            color: var(--vinci-bleu-fonce);
+            border: 1px solid #e2e8f0;
+            border-left-width: 6px;
+            border-left-style: solid;
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            cursor: pointer; 
+            box-shadow: var(--shadow-sm); 
+            gap: 14px; 
+            transition: transform 0.1s, box-shadow 0.2s, background 0.2s; 
+            overflow: hidden;
+        }
+        .c-modal-btn:active { transform: scale(0.96); box-shadow: none; background: #f8fafc; }
+        .c-modal-btn i { opacity: 1; }
 
-        /* BOTOES GERAIS */
-        .btn { background: var(--vinci-bleu-logo); color: white; border: none; padding: 18px; border-radius: 16px; width: 100%; font-weight: 700; margin-bottom: 12px; display: flex; justify-content: center; align-items: center; cursor: pointer; box-shadow: 0 8px 20px rgba(0, 68, 137, 0.2); transition: 0.2s; font-size: 15px; }
+        /* BOTOES GERAIS DAS FOLHAS DESLIZANTES E NAVEGAÇÃO */
+        .btn { 
+            background: var(--vinci-bleu-logo); 
+            color: white; 
+            border: 1px solid var(--vinci-bleu-logo);
+            border-left: 6px solid var(--vinci-bleu-clair);
+            padding: 18px; 
+            border-radius: 14px; 
+            width: 100%; 
+            font-weight: 700; 
+            margin-bottom: 12px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            cursor: pointer; 
+            box-shadow: 0 8px 20px rgba(0, 68, 137, 0.2); 
+            transition: 0.2s; 
+            font-size: 15px; 
+            overflow: hidden;
+        }
         .btn:active { transform: scale(0.96); box-shadow: none; }
-        .btn.sec { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); }
-        .btn.add { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); margin-top: 15px; box-shadow: 0 8px 20px rgba(82, 193, 221, 0.2); }
+        .btn.sec { background: white; color: var(--vinci-bleu-fonce); border: 1px solid #e2e8f0; border-left-color: #cbd5e0; box-shadow: var(--shadow-sm); }
+        .btn.add { background: var(--vinci-bleu-clair); color: var(--vinci-bleu-fonce); border: 1px solid var(--vinci-bleu-clair); border-left-color: var(--vinci-bleu-logo); margin-top: 15px; box-shadow: 0 8px 20px rgba(82, 193, 221, 0.2); }
         
+        .back-btn { background: #e2e8f0; border: none; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: 0.2s; flex-shrink: 0; }
+        .back-btn:active { transform: scale(0.9); background: #cbd5e0; }
+
         /* FORMULARIOS & UPLOAD */
         .form-label { font-size: 11px; font-weight: 800; color: #8898aa; margin-bottom: 8px; display: block; margin-top: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
         .form-input { width: 100%; padding: 16px; border-radius: 14px; border: 1px solid #e2e8f0; background: white; font-family: inherit; font-size: 14px; transition: 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.01); }
@@ -132,12 +158,26 @@
         .photo-upload { border: 2px dashed #cbd5e0; border-radius: 20px; padding: 25px; text-align: center; background: white; color: #8898aa; cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 15px; transition: 0.2s; }
         .photo-upload:active { background: #f0f9ff; border-color: var(--vinci-bleu-clair); color: var(--vinci-bleu-clair); transform: scale(0.98); }
 
-        /* LISTA INSPECÃO & NOTIFICAÇÕES */
-        .added-item { background: white; padding: 14px; border-radius: 16px; margin-bottom: 12px; border-left: 4px solid var(--vinci-rouge-logo); box-shadow: var(--shadow-sm); display: flex; gap: 12px; align-items: center; }
-        .item-thumb { width: 44px; height: 44px; background: #f1f5f9; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-shrink: 0; }
-        .item-content { flex: 1; }
-        .item-title { font-size: 14px; font-weight: 700; color: var(--vinci-bleu-fonce); display: block; margin-bottom: 2px; line-height: 1.2; }
-        .item-action { font-size: 12px; color: #64748b; line-height: 1.3; display: block; }
+        /* LISTA INSPECÃO, NOTIFICAÇÕES E CURSOS */
+        .added-item { background: white; padding: 16px; border-radius: 16px; margin-bottom: 12px; border: 1px solid #e2e8f0; border-left-width: 6px; border-left-style: solid; box-shadow: var(--shadow-sm); display: flex; gap: 14px; align-items: center; overflow: hidden; transition: transform 0.2s;}
+        .added-item:active { transform: scale(0.97); }
+        .item-thumb { width: 46px; height: 46px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #94a3b8; flex-shrink: 0; }
+        .item-content { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+        .item-title { font-size: 14px; font-weight: 700; color: var(--vinci-bleu-fonce); display: block; margin-bottom: 4px; line-height: 1.2; }
+        .item-action { font-size: 11px; color: #8898aa; font-weight: 600; line-height: 1.3; display: block; }
+        .item-action-icon { width: 32px; height: 32px; border-radius: 50%; background: #f8fafc; display: flex; align-items: center; justify-content: center; color: #64748b; flex-shrink: 0;}
+
+        /* STEPPER AUDITORIA */
+        .stepper-wrapper { padding: 10px 30px 25px; }
+        .stepper { display: flex; justify-content: space-between; align-items: center; position: relative; max-width: 300px; margin: 0 auto; }
+        .stepper::before { content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 3px; background: #e2e8f0; z-index: 0; transform: translateY(-50%); border-radius: 2px; }
+        .step { width: 32px; height: 32px; border-radius: 50%; background: white; border: 3px solid #e2e8f0; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 13px; z-index: 1; color: #94a3b8; transition: all 0.3s; }
+        .step.active { background: var(--vinci-bleu-logo); color: white; border-color: var(--vinci-bleu-logo); box-shadow: 0 4px 10px rgba(0, 68, 137, 0.3); }
+
+        /* GRID SETORES AUDITORIA */
+        .sector-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; max-height: 50vh; overflow-y: auto; padding-right: 5px; }
+        .sector-btn { background: white; border: 1px solid #e2e8f0; border-left: 6px solid var(--vinci-bleu-clair); padding: 14px 10px; border-radius: 12px; font-size: 11.5px; font-weight: 700; color: var(--vinci-bleu-fonce); box-shadow: var(--shadow-sm); cursor: pointer; transition: 0.2s; text-align: center; display: flex; align-items: center; justify-content: center; min-height: 48px; line-height: 1.2; overflow: hidden; }
+        .sector-btn:active { transform: scale(0.95); border-color: var(--vinci-bleu-clair); background: #f0f9ff; }
 
         /* CHAT INTERFACE */
         .chat-box { height: 350px; overflow-y: auto; display: flex; flex-direction: column; gap: 12px; margin-bottom: 15px; scrollbar-width: none; }
@@ -148,26 +188,21 @@
         /* TOAST */
         #toast { position: absolute; top: 50px; left: 50%; transform: translateX(-50%); background: var(--vinci-bleu-fonce); color: white; padding: 14px 28px; border-radius: 50px; font-size: 13px; font-weight: 700; display: none; z-index: 3000; box-shadow: var(--shadow-lg); animation: slideDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space: nowrap; border: 1px solid rgba(255,255,255,0.1); }
         @keyframes slideDown { from { top: 20px; opacity: 0; transform: translate(-50%, -20px) scale(0.9); } to { top: 50px; opacity: 1; transform: translate(-50%, 0) scale(1); } }
+
+        /* ANIMAÇÕES DASHBOARD TELA INTEIRA */
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        @keyframes slideDownOut { from { transform: translateY(0); } to { transform: translateY(100%); } }
     </style>
 </head>
 <body>
 
     <div class="phone-frame">
-        <div id="toast">Operação realizada com sucesso!</div>
+        <div id="toast"></div>
 
-        <!-- TELA DE LOGIN -->
+        <!-- SPLASH SCREEN (TELA DE ENTRADA) -->
         <div id="loginScreen">
-            <div class="login-logo-container">
-                <i data-lucide="plane-takeoff" size="48" color="white"></i>
-            </div>
-            <h1 style="font-size:32px; margin:0 0 5px; letter-spacing: 1px;">REGHUB AI</h1>
-            <p style="font-size:12px; opacity:0.8; margin-bottom:45px; font-weight: 500; letter-spacing: 2px;">VINCI AIRPORTS BRAZIL</p>
-            
-            <div style="width: 100%; max-width: 300px;">
-                <input type="text" class="login-input" placeholder="ID Corporativo" value="joao.pedro">
-                <input type="password" class="login-input" placeholder="Palavra-passe" value="********">
-                <button class="login-btn" onclick="doLogin()">ACESSAR</button>
-            </div>
+            <img src="https://i.ibb.co/4ZJqm8XH/Gemini-Generated-Image-8bqxii8bqxii8bqx-removebg-preview.png" alt="Logo REGHUB AI" style="width: 260px; max-width: 80%; height: auto; margin-bottom: 50px;">
+            <!-- Removido o botão de acessar para transição automática -->
         </div>
 
         <!-- APP PRINCIPAL -->
@@ -179,35 +214,21 @@
                     <div style="font-size:12px; color:#8898aa; font-weight:600; text-transform: uppercase; letter-spacing: 0.5px;">Bem-vindo de volta,</div>
                     <div class="user-name">João Pedro</div>
                 </div>
-                <!-- SINO DE NOTIFICAÇÕES (Modificado) -->
                 <div class="header-icon-btn" onclick="openModal('notificationsModal')">
                     <i data-lucide="bell" size="20" color="var(--vinci-bleu-fonce)"></i>
                     <div class="badge-dot" id="notificationBadge"></div>
                 </div>
             </header>
 
-            <div class="summary-card">
-                <div style="position: relative; z-index: 1;">
-                    <p style="margin:0 0 4px; font-size:12px; opacity:0.85; font-weight: 600;">Status Regulatório</p>
-                    <h3 style="margin:0; font-size:34px; letter-spacing: -1px;">98.5%</h3>
-                    <div style="font-size:12px; margin-top:8px; opacity:0.95; display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.15); padding: 6px 12px; border-radius: 20px; width: fit-content; backdrop-filter: blur(4px);">
-                        <i data-lucide="check-circle-2" size="14"></i> Operação Normal
-                    </div>
-                </div>
-                <div class="progress-circle">
-                    <i data-lucide="shield-check" size="28"></i>
-                </div>
-            </div>
-
             <main class="scroll-content">
                 <span style="font-size:12px; font-weight:800; color:#8898aa; display:block; margin-bottom:16px; letter-spacing: 1px;">MÓDULOS DE GESTÃO</span>
                 <div class="grid">
-                    <!-- AUDITORIA -->
+                    <!-- AUDITORIA INTERNA -->
                     <div class="card" onclick="openCenteredModal('auditTypeModal')">
                         <div>
                             <div class="icon-box" style="background:var(--vinci-bleu-logo);"><i data-lucide="clipboard-list"></i></div>
-                            <div class="card-title">Auditoria</div>
-                            <div class="card-desc">Simulação e fiscalização</div>
+                            <div class="card-title">Auditoria Interna</div>
+                            <div class="card-desc">Simulação e Fiscalização</div>
                         </div>
                     </div>
                     <!-- CHATBOT -->
@@ -234,14 +255,21 @@
                             <div class="card-desc">Registos de Rondas</div>
                         </div>
                     </div>
-                    <!-- INDICADORES -->
-                    <div class="card" onclick="openPowerBI()" style="grid-column:span 2; height:90px; flex-direction:row; align-items:center; justify-content:flex-start;">
-                        <div class="icon-box" style="background:var(--vinci-rose); margin:0; margin-right:16px;"><i data-lucide="bar-chart-2"></i></div>
+                    <!-- DOCS REG (Base de Conhecimento) -->
+                    <div class="card" onclick="openCenteredModal('docsRegTypeModal')">
                         <div>
+                            <div class="icon-box" style="background:var(--vinci-rose);"><i data-lucide="book-open"></i></div>
+                            <div class="card-title">Docs Reg</div>
+                            <div class="card-desc">Base de Conhecimento</div>
+                        </div>
+                    </div>
+                    <!-- INDICADORES -->
+                    <div class="card" onclick="openDashboard()">
+                        <div>
+                            <div class="icon-box" style="background:var(--vinci-jaune); color:var(--vinci-bleu-fonce);"><i data-lucide="bar-chart-2"></i></div>
                             <div class="card-title">Indicadores</div>
                             <div class="card-desc">Dashboard e KPIs</div>
                         </div>
-                        <div style="margin-left:auto; color:#cbd5e0;"><i data-lucide="chevron-right"></i></div>
                     </div>
                 </div>
             </main>
@@ -264,19 +292,19 @@
         <!-- MODAIS CENTRALIZADOS (SELEÇÃO)             -->
         <!-- ========================================== -->
         
-        <!-- MODAL AUDITORIA -->
+        <!-- MODAL AUDITORIA INTERNA -->
         <div class="centered-modal-container" id="auditTypeModal">
             <div class="centered-modal">
                 <div class="c-modal-header">
-                    <span class="c-modal-title">Auditoria</span>
+                    <span class="c-modal-title">Auditoria Interna</span>
                     <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('auditTypeModal')"></i>
                 </div>
                 <div class="c-modal-body">
-                    <button class="c-modal-btn c-btn-blue" onclick="startAuditWizardFromModal()">
-                        <i data-lucide="clipboard-check" size="20"></i> Simulação (Checklist)
+                    <button class="c-modal-btn" onclick="startAuditWizardFromModal()" style="border-left-color: var(--vinci-bleu-logo);">
+                        <i data-lucide="clipboard-check" size="20" color="var(--vinci-bleu-logo)"></i> Verificação de Conformidade
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="startFiscalizacaoFromModal()">
-                        <i data-lucide="upload-cloud" size="20"></i> Fiscalização Oficial
+                    <button class="c-modal-btn" onclick="startFiscalizacaoFromModal()" style="border-left-color: var(--vinci-violet);">
+                        <i data-lucide="upload-cloud" size="20" color="var(--vinci-violet)"></i> Fiscalização Oficial
                     </button>
                 </div>
             </div>
@@ -290,17 +318,41 @@
                     <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('chatTypeModal')"></i>
                 </div>
                 <div class="c-modal-body">
-                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('Procedimentos')" style="border-left-color: var(--vinci-bleu-clair);">
+                    <button class="c-modal-btn" onclick="initChatFromModal('Procedimentos')" style="border-left-color: var(--vinci-bleu-clair);">
                         <i data-lucide="settings" size="20" color="var(--vinci-bleu-clair)"></i> Procedimentos Internos
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('MAPA')">
+                    <button class="c-modal-btn" onclick="initChatFromModal('MAPA')" style="border-left-color: #D97706;">
                         <i data-lucide="wheat" size="20" color="#D97706"></i> Especialista MAPA
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('Anvisa')">
+                    <button class="c-modal-btn" onclick="initChatFromModal('Anvisa')" style="border-left-color: var(--vinci-rose);">
                         <i data-lucide="pill" size="20" color="var(--vinci-rose)"></i> Especialista Anvisa
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="initChatFromModal('RFB')">
+                    <button class="c-modal-btn" onclick="initChatFromModal('RFB')" style="border-left-color: var(--vinci-vert);">
                         <i data-lucide="landmark" size="20" color="var(--vinci-vert)"></i> Receita Federal
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL DOCS REG -->
+        <div class="centered-modal-container" id="docsRegTypeModal">
+            <div class="centered-modal">
+                <div class="c-modal-header">
+                    <span class="c-modal-title" style="color: var(--vinci-rose);">Documentos Regulatórios</span>
+                    <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('docsRegTypeModal')"></i>
+                </div>
+                <div class="c-modal-body">
+                    <button class="c-modal-btn" onclick="openDocsCategory('Procedimentos Internos')" style="border-left-color: var(--vinci-bleu-clair);">
+                        <i data-lucide="folder-open" size="20" color="var(--vinci-bleu-clair)"></i> Procedimentos Internos
+                    </button>
+                    <button class="c-modal-btn" onclick="openDocsCategory('Legislação ANVISA')" style="border-left-color: var(--vinci-rose);">
+                        <i data-lucide="folder-open" size="20" color="var(--vinci-rose)"></i> Legislação Anvisa
+                    </button>
+                    <button class="c-modal-btn" onclick="openDocsCategory('Legislação MAPA')" style="border-left-color: #D97706;">
+                        <i data-lucide="folder-open" size="20" color="#D97706"></i> Legislação MAPA
+                    </button>
+                    <button class="c-modal-btn" onclick="openDocsCategory('Legislação RFB')" style="border-left-color: var(--vinci-vert);">
+                        <i data-lucide="folder-open" size="20" color="var(--vinci-vert)"></i> Legislação RFB
                     </button>
                 </div>
             </div>
@@ -314,14 +366,14 @@
                     <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('trainTypeModal')"></i>
                 </div>
                 <div class="c-modal-body">
-                    <button class="c-modal-btn c-btn-blue" onclick="runDiagnosisFromModal()" style="background: linear-gradient(135deg, var(--vinci-bleu-clair), #3b82f6); border:none;">
-                        <i data-lucide="search" size="20"></i> Diagnóstico de Vencimentos
+                    <button class="c-modal-btn" onclick="runDiagnosisFromModal()" style="border-left-color: var(--vinci-bleu-clair);">
+                        <i data-lucide="search" size="20" color="var(--vinci-bleu-clair)"></i> Diagnóstico de Vencimentos
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="showAttendanceFromModal()">
-                        <i data-lucide="users" size="20"></i> Lista de Presença Digital
+                    <button class="c-modal-btn" onclick="showAttendanceFromModal()" style="border-left-color: #64748b;">
+                        <i data-lucide="users" size="20" color="#64748b"></i> Lista de Presença Digital
                     </button>
-                    <button class="c-modal-btn c-btn-outline" onclick="runEvaluationFromModal()">
-                        <i data-lucide="bar-chart-3" size="20"></i> Criar Avaliação
+                    <button class="c-modal-btn" onclick="runEvaluationFromModal()" style="border-left-color: var(--vinci-violet);">
+                        <i data-lucide="file-check-2" size="20" color="var(--vinci-violet)"></i> Criar Avaliação
                     </button>
                 </div>
             </div>
@@ -335,11 +387,11 @@
                     <i data-lucide="x" size="20" class="c-modal-close" onclick="closeCenteredModal('inspectTypeModal')"></i>
                 </div>
                 <div class="c-modal-body">
-                    <button class="c-modal-btn c-btn-blue" onclick="startInspectionFlow('Ronda Programada')">
-                        <i data-lucide="refresh-cw" size="20"></i> Ronda Programada
+                    <button class="c-modal-btn" onclick="startInspectionFlow('Ronda Programada')" style="border-left-color: var(--vinci-bleu-logo);">
+                        <i data-lucide="refresh-cw" size="20" color="var(--vinci-bleu-logo)"></i> Ronda
                     </button>
-                    <button class="c-modal-btn c-btn-red" onclick="startInspectionFlow('Blitz Surpresa')">
-                        <i data-lucide="zap" size="20"></i> Blitz Surpresa
+                    <button class="c-modal-btn" onclick="startInspectionFlow('Blitz Surpresa')" style="border-left-color: var(--vinci-rouge-logo);">
+                        <i data-lucide="zap" size="20" color="var(--vinci-rouge-logo)" fill="var(--vinci-rouge-logo)"></i> Blitz
                     </button>
                 </div>
             </div>
@@ -349,25 +401,31 @@
         <!-- FOLHAS DESLIZANTES (SHEETS) BOTTOM UP      -->
         <!-- ========================================== -->
 
-        <!-- 1. FOLHA AUDITORIA -->
+        <!-- 1. FOLHA AUDITORIA INTERNA -->
         <div class="sheet" id="auditModal">
             <div class="handle"></div>
-            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Auditoria</h2>
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <button class="back-btn" onclick="goBack('auditTypeModal')">
+                    <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                </button>
+                <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Auditoria Interna</h2>
+            </div>
 
             <div id="auditWizard" style="display:none;">
-                <div class="stepper">
-                    <div class="step active" id="st1">1</div>
-                    <div class="step" id="st2">2</div>
-                    <div class="step" id="st3">3</div>
+                <div class="stepper-wrapper">
+                    <div class="stepper">
+                        <div class="step active" id="st1">1</div>
+                        <div class="step" id="st2">2</div>
+                        <div class="step" id="st3">3</div>
+                        <div class="step" id="st4">4</div>
+                    </div>
                 </div>
                 <div id="auditStepContent">
-                    <div style="text-align:center; padding:40px 20px;">
-                        <i data-lucide="loader-2" class="animate-spin" size="40" style="margin-bottom:15px; color:var(--vinci-bleu-clair);"></i>
-                        <p style="font-weight:600; color:#555;">IA a gerar o melhor checklist...</p>
-                    </div>
                 </div>
             </div>
 
+            <!-- FISCALIZAÇÃO UPLOAD DOCS -->
             <div id="auditFiscal" style="display:none;">
                 <div class="photo-upload" onclick="simulateUpload()">
                     <i data-lucide="file-text" size="36" color="var(--vinci-bleu-clair)"></i>
@@ -375,17 +433,24 @@
                     <span style="font-size:11px;">A IA irá extrair as não conformidades.</span>
                 </div>
                 <div id="fiscalResult"></div>
-                <button class="btn sec" onclick="closeAll()">Cancelar</button>
+                <button class="btn sec" onclick="goBack('auditTypeModal')">Cancelar</button>
             </div>
         </div>
 
-        <!-- 2. FOLHA TREINAMENTO -->
-        <div class="sheet" id="trainModal">
+        <!-- 2. FOLHA TREINAMENTO (Expansão: Presença e Avaliação) -->
+        <div class="sheet" id="trainModal" style="padding-bottom: 50px;">
             <div class="handle"></div>
-            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Treinamento</h2>
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <button class="back-btn" onclick="goBack('trainTypeModal')">
+                    <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                </button>
+                <h2 id="trainModalTitle" style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Treinamento</h2>
+            </div>
 
+            <!-- VISTA: Diagnóstico 90 dias -->
             <div id="trainDiagnosis" style="display:none;">
-                <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 15px; letter-spacing: 1px;">DIAGNÓSTICO: 90 DIAS</p>
+                <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 15px; letter-spacing: 1px;">DIAGNÓSTICO: VENCIMENTOS PRÓXIMOS</p>
                 <div style="background:white; padding:18px; border-radius:20px; border:1px solid #e2e8f0; margin-bottom:12px; box-shadow:var(--shadow-sm);">
                     <div style="display:flex; justify-content:space-between; font-weight:800; color:var(--vinci-bleu-fonce);"><span>João Silva</span><span style="color:var(--vinci-rouge-logo); font-size: 13px;">45 Dias</span></div>
                     <div style="font-size:12px; color:#64748b; margin-top:6px; font-weight: 500;">PTCA-301 • Cargas Perigosas</div>
@@ -396,9 +461,119 @@
                     <div style="font-size:12px; color:#64748b; margin-top:6px; font-weight: 500;">Empilhadeira • Condução</div>
                     <div style="width:100%; height:6px; background:#f1f5f9; margin-top:12px; border-radius:4px;"><div style="width:40%; height:100%; background:var(--vinci-jaune); border-radius:4px;"></div></div>
                 </div>
-                <button class="btn" style="background:var(--vinci-vert);" onclick="showToast('Convites enviados com sucesso!'); closeAll();">
+                <button class="btn" style="background:var(--vinci-vert); border-color:var(--vinci-vert); border-left-color: #047857;" onclick="showToast('Convites enviados com sucesso!'); goBack('trainTypeModal');">
                     Inscrever e Notificar
                 </button>
+            </div>
+
+            <!-- VISTA: Lista de Presença -->
+            <div id="trainAttendance" style="display:none;">
+                
+                <!-- Step 1: Selecionar o Curso -->
+                <div id="trainAttendanceStep1">
+                    <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 15px; letter-spacing: 1px;">CURSOS COM PENDÊNCIAS</p>
+                    
+                    <div class="added-item" style="border-left-color: var(--vinci-bleu-logo); cursor:pointer;" onclick="showAttendanceCourse('PTCA-301 - Cargas Perigosas')">
+                        <div class="item-thumb" style="background: #e0f2fe; color: var(--vinci-bleu-logo);"><i data-lucide="book-open" size="20"></i></div>
+                        <div class="item-content">
+                            <span class="item-title">PTCA-301 - Cargas Perigosas</span>
+                            <span class="item-action">2 Colaboradores requeridos</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="18" color="#cbd5e0"></i>
+                    </div>
+
+                    <div class="added-item" style="border-left-color: var(--vinci-jaune); cursor:pointer;" onclick="showAttendanceCourse('Condução de Empilhadeira')">
+                        <div class="item-thumb" style="background: #fef9c3; color: #ca8a04;"><i data-lucide="truck" size="20"></i></div>
+                        <div class="item-content">
+                            <span class="item-title">Condução de Empilhadeira</span>
+                            <span class="item-action">1 Colaborador requerido</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="18" color="#cbd5e0"></i>
+                    </div>
+
+                    <div class="added-item" style="border-left-color: var(--vinci-rose); cursor:pointer;" onclick="showAttendanceCourse('RDC 430 - Boas Práticas ANVISA')">
+                        <div class="item-thumb" style="background: #ffe4e6; color: var(--vinci-rose);"><i data-lucide="pill" size="20"></i></div>
+                        <div class="item-content">
+                            <span class="item-title">RDC 430 - Boas Práticas</span>
+                            <span class="item-action">1 Colaborador requerido</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="18" color="#cbd5e0"></i>
+                    </div>
+                </div>
+
+                <!-- Step 2: Lista de Pessoas para "Picar" Ponto -->
+                <div id="trainAttendanceStep2" style="display:none;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 20px;">
+                        <button class="back-btn" onclick="backToAttendanceList()"><i data-lucide="arrow-left" size="16" color="#475569"></i></button>
+                        <h4 id="attendanceCourseTitle" style="margin:0; color:var(--vinci-bleu-fonce); font-size:16px;">Curso</h4>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 20px; text-align: center; border: 1px solid #e2e8f0; border-top: 6px solid var(--vinci-bleu-clair); box-shadow: var(--shadow-sm); margin-bottom: 24px;">
+                        <p style="font-size:13px; color:var(--vinci-bleu-fonce); font-weight:800; margin:0 0 10px; text-transform: uppercase;">Lista Oficial do RH</p>
+                        <i data-lucide="qr-code" size="90" color="var(--vinci-bleu-fonce)" style="margin-bottom:10px;"></i>
+                        <p style="font-size:12px; color:#64748b; line-height:1.4; margin:0;">
+                            Peça aos formandos para lerem este código com a câmara e assinarem o formulário do RH.
+                        </p>
+                    </div>
+
+                    <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 12px; letter-spacing: 1px;">CONTROLO INTERNO (LIDERANÇA)</p>
+                    <div id="attendancePeopleList" style="margin-bottom: 20px;">
+                        <!-- Injetado via JS -->
+                    </div>
+
+                    <button class="btn" style="background:var(--vinci-vert); border-color:var(--vinci-vert); border-left-color: #047857;" onclick="showToast('Controlo interno gravado com sucesso!'); goBack('trainTypeModal');">
+                        Guardar Controlo Interno
+                    </button>
+                </div>
+            </div>
+
+            <!-- VISTA: Criar Avaliação -->
+            <div id="trainEvaluation" style="display:none;">
+                
+                <!-- Step 1: Selecionar o Curso -->
+                <div id="trainEvaluationStep1">
+                    <p style="font-weight:800; color:#8898aa; font-size:11px; margin-bottom: 15px; letter-spacing: 1px;">AVALIAÇÕES DE CONHECIMENTO</p>
+                    
+                    <div class="added-item" style="border-left-color: var(--vinci-violet); cursor:pointer;" onclick="showEvaluationCourse('PTCA-301 - Cargas Perigosas')">
+                        <div class="item-thumb" style="background: #f3e8ff; color: var(--vinci-violet);"><i data-lucide="file-check-2" size="20"></i></div>
+                        <div class="item-content">
+                            <span class="item-title">PTCA-301 - Cargas Perigosas</span>
+                            <span class="item-action">Prova Teórica (10 Questões)</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="18" color="#cbd5e0"></i>
+                    </div>
+
+                    <div class="added-item" style="border-left-color: var(--vinci-violet); cursor:pointer;" onclick="showEvaluationCourse('Condução de Empilhadeira')">
+                        <div class="item-thumb" style="background: #f3e8ff; color: var(--vinci-violet);"><i data-lucide="file-check-2" size="20"></i></div>
+                        <div class="item-content">
+                            <span class="item-title">Condução de Empilhadeira</span>
+                            <span class="item-action">Prova Teórica (15 Questões)</span>
+                        </div>
+                        <i data-lucide="chevron-right" size="18" color="#cbd5e0"></i>
+                    </div>
+                </div>
+
+                <!-- Step 2: Compartilhar Link/QR -->
+                <div id="trainEvaluationStep2" style="display:none;">
+                    <div style="display:flex; align-items:center; gap:10px; margin-bottom: 15px;">
+                        <button class="back-btn" onclick="backToEvaluationList()"><i data-lucide="arrow-left" size="16" color="#475569"></i></button>
+                        <h4 id="evaluationCourseTitle" style="margin:0; color:var(--vinci-bleu-fonce); font-size:16px;">Curso</h4>
+                    </div>
+
+                    <div style="background:white; padding:30px 20px; border-radius:20px; text-align:center; border:1px solid #e2e8f0; box-shadow:var(--shadow-sm); margin-bottom:20px;">
+                        <i data-lucide="qr-code" size="120" color="var(--vinci-bleu-fonce)" style="margin-bottom:10px;"></i>
+                        <p style="font-size:13px; color:#64748b; font-weight:500; line-height:1.4; margin:0;">
+                            Peça aos formandos para lerem o QR Code ou partilhe o link abaixo para iniciarem a avaliação no telemóvel.
+                        </p>
+                    </div>
+
+                    <button class="btn" style="background:var(--vinci-bleu-clair); color:var(--vinci-bleu-fonce); border-color:var(--vinci-bleu-clair); border-left-color:var(--vinci-bleu-logo);" onclick="showToast('Link da avaliação copiado!');">
+                        <i data-lucide="link" size="18" style="margin-right:8px;"></i> Copiar Link da Prova
+                    </button>
+                    <button class="btn sec" onclick="showToast('A abrir pauta de resultados...');">
+                        <i data-lucide="bar-chart" size="18" style="margin-right:8px;"></i> Ver Notas (Dashboard)
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -406,8 +581,12 @@
         <div class="sheet" id="chatModal">
             <div class="handle"></div>
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
-                <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 20px;" id="chatTitle">Assistente IA</h2>
-                <button onclick="closeAll(); openCenteredModal('chatTypeModal')" style="background:#e2e8f0; border:none; padding:6px 12px; border-radius:20px; font-size:11px; font-weight:700; cursor:pointer; color:#475569;">Trocar</button>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="back-btn" onclick="goBack('chatTypeModal')">
+                        <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                    </button>
+                    <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 20px;" id="chatTitle">Assistente IA</h2>
+                </div>
             </div>
             
             <div id="chatInterface" style="height:55vh; max-height:450px; flex-direction:column; display:flex;">
@@ -422,7 +601,13 @@
         <!-- 4. FOLHA INSPEÇÃO (FORMULÁRIO MULTI-ITEM) -->
         <div class="sheet" id="inspectFormModal">
             <div class="handle"></div>
-            <h2 style="margin-top:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Inspeção de Campo</h2>
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <button class="back-btn" onclick="goBack('inspectTypeModal')">
+                    <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                </button>
+                <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Inspeção de Campo</h2>
+            </div>
             
             <div style="background: white; border: 1px solid #e2e8f0; padding: 12px 16px; border-radius: 12px; margin-bottom: 20px; font-weight: 700; font-size: 13px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm);">
                 <span style="color: #64748b;">OPERAÇÃO</span>
@@ -450,21 +635,25 @@
                 <span style="font-size:11px; font-weight:800; color:#8898aa; margin-bottom:12px; display:block; letter-spacing: 1px;">ITENS REGISTADOS NESTA SESSÃO:</span>
             </div>
 
-            <button class="btn" style="margin-top:25px; background:var(--vinci-bleu-fonce);" onclick="showToast('Relatório Submetido e Assinado!'); closeAll();">
+            <button class="btn" style="margin-top:25px;" onclick="showToast('Relatório Submetido e Assinado!'); goBack('inspectTypeModal');">
                 Finalizar Relatório
             </button>
         </div>
 
-        <!-- 5. FOLHA DE NOTIFICAÇÕES (NOVA TELA) -->
+        <!-- 5. FOLHA DE NOTIFICAÇÕES -->
         <div class="sheet" id="notificationsModal">
             <div class="handle"></div>
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Notificações</h2>
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="back-btn" onclick="closeAll()">
+                        <i data-lucide="x" size="18" color="#475569"></i>
+                    </button>
+                    <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px;">Notificações</h2>
+                </div>
                 <span style="font-size: 12px; color: var(--vinci-bleu-clair); font-weight: 700; cursor: pointer;" onclick="clearNotifications()">Marcar como lidas</span>
             </div>
 
             <div id="notificationsContentList">
-                <!-- Notificação 1 (Urgente) -->
                 <div class="added-item" style="border-left-color: var(--vinci-rouge-logo);">
                     <div class="item-thumb" style="background: #fee2e2; color: var(--vinci-rouge-logo);"><i data-lucide="alert-triangle" size="20"></i></div>
                     <div class="item-content">
@@ -475,37 +664,131 @@
                         <span class="item-action">O seu curso PTCA-301 vence em 45 dias. Agende a reciclagem.</span>
                     </div>
                 </div>
+            </div>
+        </div>
 
-                <!-- Notificação 2 (Info) -->
-                <div class="added-item" style="border-left-color: var(--vinci-bleu-clair);">
-                    <div class="item-thumb" style="background: #e0f2fe; color: var(--vinci-bleu-logo);"><i data-lucide="info" size="20"></i></div>
-                    <div class="item-content">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                            <span class="item-title" style="margin: 0;">Nova Diretiva ANVISA</span>
-                            <span style="font-size: 10px; color: #94a3b8; font-weight: 600;">Há 2h</span>
-                        </div>
-                        <span class="item-action">O manual RDC 430 foi atualizado na nossa base de dados.</span>
+        <!-- 6. FOLHA DOCUMENTOS REGULATÓRIOS -->
+        <div class="sheet" id="docsModal" style="background: var(--vinci-gris); padding: 25px 25px 40px;">
+            <div class="handle"></div>
+            
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+                <button class="back-btn" onclick="goBack('docsRegTypeModal')">
+                    <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                </button>
+                <h2 id="docsModalTitle" style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px; font-weight: 800;">Documentos</h2>
+            </div>
+            
+            <div style="position: relative; margin-bottom: 24px;">
+                <div style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; color: #94a3b8;">
+                    <i data-lucide="search" size="20"></i>
+                </div>
+                <input type="text" class="form-input" placeholder="Pesquisar documento..." style="padding: 16px 16px 16px 48px; border-radius: 16px; background: white; border: 1px solid #e2e8f0; font-weight: 600; color: var(--vinci-bleu-fonce); box-shadow: var(--shadow-sm); width: 100%;">
+            </div>
+
+            <div id="docsList" style="max-height: 50vh; overflow-y: auto; margin-bottom: 10px; display: flex; flex-direction: column;">
+            </div>
+            
+            <button class="btn sec" style="margin-top: 15px;" onclick="goBack('docsRegTypeModal')">Voltar</button>
+        </div>
+
+        <!-- 7. DASHBOARD NATIVO (TELA INTEIRA - SEM SCROLL) -->
+        <div id="dashboardFullScreen" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--vinci-gris); z-index: 150; flex-direction: column; overflow: hidden; border-radius: inherit;">
+            
+            <div class="status-bar" style="background: white; flex-shrink: 0;"><span>09:41</span><span>📶 100%</span></div>
+            
+            <!-- Header -->
+            <div style="padding: 10px 25px 20px; background: white; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-sm); z-index: 10; flex-shrink: 0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button class="back-btn" onclick="closeDashboard()">
+                        <i data-lucide="arrow-left" size="18" color="#475569"></i>
+                    </button>
+                    <h2 style="margin:0; color:var(--vinci-bleu-fonce); font-size: 22px; font-weight: 800;">Dashboard</h2>
+                </div>
+                <button style="background:white; border:1px solid #e2e8f0; border-radius:12px; padding:8px 12px; font-size:11px; font-weight:700; color:#64748b; cursor:pointer; box-shadow:var(--shadow-sm); display:flex; align-items:center; gap:6px;">
+                    <i data-lucide="calendar" size="14"></i> Este Mês
+                </button>
+            </div>
+
+            <!-- Dashboard Content (Desenhado para caber perfeitamente na tela sem rolar) -->
+            <div style="flex: 1; padding: 20px 25px; display: flex; flex-direction: column; gap: 15px; justify-content: flex-start; overflow: hidden;">
+                
+                <!-- Hero Metric -->
+                <div style="background: linear-gradient(135deg, var(--vinci-bleu-fonce), var(--vinci-bleu-logo)); border-radius: 20px; padding: 24px; color: white; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow-md); flex-shrink: 0;">
+                    <div>
+                        <p style="margin: 0 0 8px 0; font-size: 11px; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 1px;">Saúde Regulatória</p>
+                        <h3 style="margin: 0; font-size: 36px; font-weight: 800;">94.5%</h3>
+                        <p style="margin: 8px 0 0 0; font-size: 11px; font-weight: 600; display:flex; align-items:center; gap:4px; color:#a7f3d0;"><i data-lucide="trending-up" size="14"></i> +2.1% vs mês anterior</p>
+                    </div>
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,0.1); border: 3px solid #a7f3d0; display: flex; align-items: center; justify-content: center;">
+                        <i data-lucide="shield-check" size="32" color="#a7f3d0"></i>
                     </div>
                 </div>
 
-                <!-- Notificação 3 (Sucesso) -->
-                <div class="added-item" style="border-left-color: var(--vinci-vert);">
-                    <div class="item-thumb" style="background: #dcfce7; color: var(--vinci-vert);"><i data-lucide="check-circle" size="20"></i></div>
-                    <div class="item-content">
-                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 4px;">
-                            <span class="item-title" style="margin: 0;">Auditoria Validada</span>
-                            <span style="font-size: 10px; color: #94a3b8; font-weight: 600;">Ontem</span>
-                        </div>
-                        <span class="item-action">Ronda no Almoxarifado registada e validada com sucesso pelo sistema.</span>
+                <!-- KPI Grid -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; flex-shrink: 0;">
+                    <div style="background: white; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0; border-left: 4px solid var(--vinci-bleu-clair); box-shadow: var(--shadow-sm);">
+                        <i data-lucide="clipboard-check" size="20" color="var(--vinci-bleu-clair)" style="margin-bottom:8px;"></i>
+                        <h4 style="margin: 0 0 4px 0; font-size: 20px; color: var(--vinci-bleu-fonce);">12</h4>
+                        <p style="margin: 0; font-size: 11px; color: #8898aa; font-weight: 600;">Auditorias no Prazo</p>
+                    </div>
+                    <div style="background: white; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0; border-left: 4px solid var(--vinci-rouge-logo); box-shadow: var(--shadow-sm);">
+                        <i data-lucide="alert-triangle" size="20" color="var(--vinci-rouge-logo)" style="margin-bottom:8px;"></i>
+                        <h4 style="margin: 0 0 4px 0; font-size: 20px; color: var(--vinci-bleu-fonce);">3</h4>
+                        <p style="margin: 0; font-size: 11px; color: #8898aa; font-weight: 600;">NCs Pendentes</p>
+                    </div>
+                    <div style="background: white; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0; border-left: 4px solid var(--vinci-vert); box-shadow: var(--shadow-sm);">
+                        <i data-lucide="graduation-cap" size="20" color="var(--vinci-vert)" style="margin-bottom:8px;"></i>
+                        <h4 style="margin: 0 0 4px 0; font-size: 20px; color: var(--vinci-bleu-fonce);">98%</h4>
+                        <p style="margin: 0; font-size: 11px; color: #8898aa; font-weight: 600;">Treinamento Válido</p>
+                    </div>
+                    <div style="background: white; padding: 16px; border-radius: 16px; border: 1px solid #e2e8f0; border-left: 4px solid var(--vinci-violet); box-shadow: var(--shadow-sm);">
+                        <i data-lucide="scan-eye" size="20" color="var(--vinci-violet)" style="margin-bottom:8px;"></i>
+                        <h4 style="margin: 0 0 4px 0; font-size: 20px; color: var(--vinci-bleu-fonce);">45</h4>
+                        <p style="margin: 0; font-size: 11px; color: #8898aa; font-weight: 600;">Rondas Executadas</p>
                     </div>
                 </div>
+
+                <!-- Bar Charts (Conformidade por Órgão) - Preenche o espaço dinamicamente -->
+                <div style="background: white; padding: 20px; border-radius: 20px; border: 1px solid #e2e8f0; box-shadow: var(--shadow-sm); flex: 1; display: flex; flex-direction: column; justify-content: center; min-height: 180px;">
+                    <h4 style="margin: 0 0 16px 0; font-size: 12px; color: var(--vinci-bleu-fonce); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;">Conformidade por Órgão</h4>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--vinci-bleu-fonce); margin-bottom: 6px;">
+                            <span>ANVISA</span>
+                            <span>100%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 100%; height: 100%; background: var(--vinci-vert); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--vinci-bleu-fonce); margin-bottom: 6px;">
+                            <span>MAPA</span>
+                            <span>85%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 85%; height: 100%; background: var(--vinci-jaune); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 0;">
+                        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--vinci-bleu-fonce); margin-bottom: 6px;">
+                            <span>Receita Federal (RFB)</span>
+                            <span>98%</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: #f1f5f9; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 98%; height: 100%; background: var(--vinci-vert); border-radius: 4px;"></div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
     </div>
 
     <script>
-        // Inicializar ícones do Lucide
         lucide.createIcons();
 
         /* --- NAVEGAÇÃO E SISTEMA --- */
@@ -517,6 +800,11 @@
                 setTimeout(() => document.getElementById('appInterface').style.opacity='1', 50); 
             }, 500);
         }
+
+        // Fechar tela de entrada (Splash Screen) automaticamente após 3 segundos
+        setTimeout(() => {
+            doLogin();
+        }, 3000);
         
         function showToast(m) { 
             const t = document.getElementById('toast'); 
@@ -537,31 +825,44 @@
             document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open')); 
         }
         
-        function openPowerBI() { 
-            window.open('https://powerbi.microsoft.com','_blank'); 
-            showToast('A redirecionar para o Power BI...'); 
+        // Nova função para navegação "Voltar" (de uma Sheet para o Modal Centralizado correspondente)
+        function goBack(centeredModalId) {
+            document.querySelectorAll('.sheet').forEach(s => s.classList.remove('open'));
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('overlay').style.opacity = '1';
+            document.getElementById(centeredModalId).classList.add('open');
         }
 
-        /* --- LÓGICA DAS NOTIFICAÇÕES --- */
+        // Lógica Dashboard Tela Inteira
+        function openDashboard() {
+            const dash = document.getElementById('dashboardFullScreen');
+            dash.style.display = 'flex';
+            dash.style.animation = 'slideUp 0.3s ease-out forwards';
+            lucide.createIcons();
+        }
+
+        function closeDashboard() {
+            const dash = document.getElementById('dashboardFullScreen');
+            dash.style.animation = 'slideDownOut 0.3s ease-in forwards';
+            setTimeout(() => {
+                dash.style.display = 'none';
+            }, 300);
+        }
+
         function clearNotifications() {
             const list = document.getElementById('notificationsContentList');
             const badge = document.getElementById('notificationBadge');
-            
             list.innerHTML = `
                 <div style="text-align:center; padding: 40px 20px; color: #94a3b8;">
                     <i data-lucide="bell-off" size="48" style="opacity: 0.5; margin-bottom: 15px;"></i>
                     <p style="font-weight: 600; font-size: 14px; margin: 0;">Não tem novas notificações</p>
                 </div>
             `;
-            
-            if (badge) {
-                badge.style.display = 'none';
-            }
-            
-            lucide.createIcons(); // Recarregar o ícone de bell-off recém adicionado
+            if (badge) badge.style.display = 'none';
+            lucide.createIcons();
         }
 
-        /* --- MODAIS CENTRALIZADOS (SELEÇÃO) --- */
+        /* --- MODAIS CENTRALIZADOS --- */
         function openCenteredModal(id) {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('overlay').style.opacity = '1';
@@ -574,7 +875,6 @@
             setTimeout(() => document.getElementById('overlay').style.display = 'none', 300);
         }
 
-        /* LIGAÇÕES DOS MODAIS CENTRAIS PARA AS FOLHAS (SHEETS) */
         function startAuditWizardFromModal() {
             document.getElementById('auditTypeModal').classList.remove('open');
             openModal('auditModal');
@@ -593,14 +893,134 @@
             initChat(agent);
         }
 
+        /* --- LÓGICA DE TREINAMENTO (EXPANDIDA) --- */
         function runDiagnosisFromModal() {
-            document.getElementById('trainTypeModal').classList.remove('open');
+            closeCenteredModal('trainTypeModal');
             openModal('trainModal');
-            runDiagnosis();
+            document.getElementById('trainModalTitle').innerText = "Treinamento";
+            document.getElementById('trainAttendance').style.display = 'none';
+            document.getElementById('trainEvaluation').style.display = 'none';
+            document.getElementById('trainDiagnosis').style.display = 'block';
         }
 
-        function showAttendanceFromModal() { closeCenteredModal('trainTypeModal'); showToast('A abrir Lista de Presenças...'); }
-        function runEvaluationFromModal() { closeCenteredModal('trainTypeModal'); showToast('A gerar link da Avaliação...'); }
+        function showAttendanceFromModal() { 
+            closeCenteredModal('trainTypeModal'); 
+            openModal('trainModal');
+            document.getElementById('trainModalTitle').innerText = "Lista de Presença";
+            document.getElementById('trainDiagnosis').style.display = 'none';
+            document.getElementById('trainEvaluation').style.display = 'none';
+            document.getElementById('trainAttendance').style.display = 'block';
+            document.getElementById('trainAttendanceStep1').style.display = 'block';
+            document.getElementById('trainAttendanceStep2').style.display = 'none';
+        }
+
+        function showAttendanceCourse(course) {
+            document.getElementById('trainAttendanceStep1').style.display = 'none';
+            document.getElementById('trainAttendanceStep2').style.display = 'block';
+            document.getElementById('attendanceCourseTitle').innerText = course;
+            
+            let peopleHtml = '';
+            if (course.includes('PTCA-301')) {
+                peopleHtml = `
+                    <label style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:700; color:var(--vinci-bleu-fonce); box-shadow:var(--shadow-sm); cursor:pointer;"><div style="display:flex; gap:12px; align-items:center;"><input type="checkbox" style="width:20px; height:20px; accent-color:var(--vinci-vert);"> João Silva</div> <span style="font-size:11px; color:#e20025; background:#fee2e2; padding:4px 8px; border-radius:12px;">Vence em 45d</span></label>
+                    <label style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:700; color:var(--vinci-bleu-fonce); box-shadow:var(--shadow-sm); cursor:pointer;"><div style="display:flex; gap:12px; align-items:center;"><input type="checkbox" style="width:20px; height:20px; accent-color:var(--vinci-vert);"> Maria Souza</div> <span style="font-size:11px; color:#e20025; background:#fee2e2; padding:4px 8px; border-radius:12px;">Vencido</span></label>
+                `;
+            } else if (course.includes('Empilhadeira')) {
+                peopleHtml = `
+                    <label style="display:flex; justify-content:space-between; align-items:center; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:700; color:var(--vinci-bleu-fonce); box-shadow:var(--shadow-sm); cursor:pointer;"><div style="display:flex; gap:12px; align-items:center;"><input type="checkbox" style="width:20px; height:20px; accent-color:var(--vinci-vert);"> Bruno Oliveira</div> <span style="font-size:11px; color:#ca8a04; background:#fef9c3; padding:4px 8px; border-radius:12px;">Vence em 82d</span></label>
+                `;
+            } else {
+                 peopleHtml = `<label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:700; color:var(--vinci-bleu-fonce); box-shadow:var(--shadow-sm); cursor:pointer;"><input type="checkbox" style="width:20px; height:20px; accent-color:var(--vinci-vert);"> Ana Costa</label>`;
+            }
+            document.getElementById('attendancePeopleList').innerHTML = peopleHtml;
+        }
+
+        function backToAttendanceList() {
+            document.getElementById('trainAttendanceStep2').style.display = 'none';
+            document.getElementById('trainAttendanceStep1').style.display = 'block';
+        }
+
+        function runEvaluationFromModal() { 
+            closeCenteredModal('trainTypeModal'); 
+            openModal('trainModal');
+            document.getElementById('trainModalTitle').innerText = "Avaliações e Provas";
+            document.getElementById('trainDiagnosis').style.display = 'none';
+            document.getElementById('trainAttendance').style.display = 'none';
+            document.getElementById('trainEvaluation').style.display = 'block';
+            document.getElementById('trainEvaluationStep1').style.display = 'block';
+            document.getElementById('trainEvaluationStep2').style.display = 'none';
+        }
+
+        function showEvaluationCourse(course) {
+            document.getElementById('trainEvaluationStep1').style.display = 'none';
+            document.getElementById('trainEvaluationStep2').style.display = 'block';
+            document.getElementById('evaluationCourseTitle').innerText = course;
+            lucide.createIcons(); // Refresh for dynamically shown view
+        }
+
+        function backToEvaluationList() {
+            document.getElementById('trainEvaluationStep2').style.display = 'none';
+            document.getElementById('trainEvaluationStep1').style.display = 'block';
+        }
+
+
+        /* --- LÓGICA DOCS REGULATÓRIOS --- */
+        function openDocsCategory(category) {
+            closeCenteredModal('docsRegTypeModal');
+            document.getElementById('docsModalTitle').innerText = category;
+            
+            let docsHtml = '';
+            let color = '';
+            let bgColor = '';
+            let iconColor = '';
+
+            if (category === 'Procedimentos Internos') {
+                color = 'var(--vinci-bleu-clair)';
+                bgColor = '#e0f2fe';
+                iconColor = 'var(--vinci-bleu-logo)';
+                docsHtml += generateDocItem('POP 001 - Recebimento de Cargas', 'v2.4 • Atualizado há 5 dias', color, bgColor, iconColor);
+                docsHtml += generateDocItem('POP 002 - Movimentação em Rampa', 'v1.1 • Atualizado há 1 mês', color, bgColor, iconColor);
+            } else if (category === 'Legislação ANVISA') {
+                color = 'var(--vinci-rose)';
+                bgColor = '#ffe4e6';
+                iconColor = 'var(--vinci-rose)';
+                docsHtml += generateDocItem('RDC Nº 430/2020', 'Boas Práticas de Distribuição', color, bgColor, iconColor);
+                docsHtml += generateDocItem('RDC Nº 346/2002', 'Certificado de Boas Práticas', color, bgColor, iconColor);
+            } else if (category === 'Legislação MAPA') {
+                color = '#D97706';
+                bgColor = '#fef3c7';
+                iconColor = '#D97706';
+                docsHtml += generateDocItem('IN Nº 39/2017', 'Trânsito Internacional', color, bgColor, iconColor);
+                docsHtml += generateDocItem('Manual de Procedimentos VIGIAGRO', 'Edição 2023', color, bgColor, iconColor);
+            } else if (category === 'Legislação RFB') {
+                color = 'var(--vinci-vert)';
+                bgColor = '#dcfce7';
+                iconColor = 'var(--vinci-vert)';
+                docsHtml += generateDocItem('IN RFB Nº 800/2007', 'Controle Aduaneiro', color, bgColor, iconColor);
+                docsHtml += generateDocItem('Portaria RFB Nº 143/2022', 'Recintos Alfandegados', color, bgColor, iconColor);
+            }
+
+            document.getElementById('docsList').innerHTML = docsHtml;
+            openModal('docsModal');
+            lucide.createIcons();
+        }
+
+        function generateDocItem(title, subtitle, borderColor, bgColor, iconColor) {
+            return `
+                <div class="added-item" style="border-left-color: ${borderColor}; cursor: pointer; padding: 16px; margin-bottom: 12px; background: white; border-radius: 16px; box-shadow: var(--shadow-sm); display: flex; align-items: center; transition: transform 0.2s;" onclick="showToast('A transferir documento...')">
+                    <div class="item-thumb" style="background: ${bgColor}; color: ${iconColor}; width: 46px; height: 46px; border-radius: 12px; margin-right: 14px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <i data-lucide="file-text" size="22"></i>
+                    </div>
+                    <div class="item-content" style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+                        <span class="item-title" style="margin: 0 0 4px 0; color: var(--vinci-bleu-fonce); font-weight: 700; font-size: 14px; line-height: 1.2;">${title}</span>
+                        <span class="item-action" style="font-size: 11px; color: #8898aa; font-weight: 600;">${subtitle}</span>
+                    </div>
+                    <div class="item-action-icon" style="width: 32px; height: 32px; background: #f8fafc; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #64748b; flex-shrink: 0;">
+                        <i data-lucide="download" size="16"></i>
+                    </div>
+                </div>
+            `;
+        }
 
         /* --- LÓGICA INSPEÇÃO MULTI-ITEM --- */
         function startInspectionFlow(type) {
@@ -622,7 +1042,7 @@
             
             document.getElementById('inspectionList').style.display = 'block';
             document.getElementById('inspectionList').innerHTML += `
-                <div class="added-item">
+                <div class="added-item" style="border-left-color: var(--vinci-rouge-logo);">
                     <div class="item-thumb"><i data-lucide="image" size="20"></i></div>
                     <div class="item-content">
                         <span class="item-title">${nc}</span>
@@ -630,46 +1050,142 @@
                     </div>
                 </div>`;
             
-            lucide.createIcons(); // Recarrega os icones do novo elemento
+            lucide.createIcons(); 
             document.getElementById('ncInput').value = ''; 
             document.getElementById('actionInput').value = '';
             showToast('Evidência gravada com sucesso!');
         }
 
-        /* --- LÓGICA AUDITORIA WIZARD --- */
+        /* --- LÓGICA: AUDITORIA INTERNA (WIZARD DE 4 PASSOS) --- */
         function startAuditWizard() {
             document.getElementById('auditWizard').style.display = 'block';
             document.getElementById('auditFiscal').style.display = 'none';
+            
+            document.getElementById('st1').classList.add('active');
+            document.getElementById('st2').classList.remove('active');
+            document.getElementById('st3').classList.remove('active');
+            document.getElementById('st4').classList.remove('active');
+
+            const sectors = [
+                "Carga Nacional", "Internação/Expedição", "Internação", "Exportação",
+                "Ponto Zero", "Recebimento", "Importação", "Área ANVISA",
+                "Câmara fria", "Liberação", "Regulatório/Busca Ativa", "Controle de pragas"
+            ];
+            
+            const buttonsHtml = sectors.map(s => `<button class="sector-btn" onclick="generateChecklist('${s}')">${s}</button>`).join('');
+
+            document.getElementById('auditStepContent').innerHTML = `
+                <div style="padding: 10px 0;">
+                    <label class="form-label" style="text-align: center; margin-bottom: 15px;">Selecione o Setor da Auditoria</label>
+                    <div class="sector-grid">
+                        ${buttonsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateChecklist(sector) {
             document.getElementById('auditStepContent').innerHTML = `
                 <div style="text-align:center; padding:40px 20px;">
-                    <i data-lucide="loader-2" class="animate-spin" style="margin-bottom:15px; color:var(--vinci-bleu-clair); width: 40px; height: 40px; display:inline-block;"></i>
-                    <p style="font-weight:600; color:#555;">IA a gerar o melhor checklist...</p>
+                    <i data-lucide="loader-2" class="animate-spin" size="40" style="margin-bottom:15px; color:var(--vinci-bleu-clair);"></i>
+                    <p style="font-weight:600; color:#555;">IA a gerar o checklist para ${sector}...</p>
                 </div>`;
             lucide.createIcons();
 
             setTimeout(() => {
                 document.getElementById('st2').classList.add('active');
+                
+                let checklistHtml = `
+                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Procedimentos operacionais padronizados afixados</label>
+                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:20px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Ferramentas e equipamentos em conformidade</label>
+                `;
+
                 document.getElementById('auditStepContent').innerHTML = `
-                    <h4 style="margin:0 0 15px 0; color:var(--vinci-bleu-fonce);">Checklist Gerado (Almoxarifado)</h4>
-                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:12px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" checked style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Limpeza e integridade do piso</label>
-                    <label style="display:flex; gap:12px; padding:16px; background:white; border-radius:14px; margin-bottom:20px; border:1px solid #e2e8f0; font-size:14px; font-weight:600; box-shadow:var(--shadow-sm);"><input type="checkbox" style="width:18px; height:18px; accent-color:var(--vinci-vert);"> Validade dos extintores visível</label>
-                    <button class="btn" onclick="finishAuditWizard()">Validar Inspeção</button>`;
+                    <h4 style="margin:0 0 15px 0; color:var(--vinci-bleu-fonce);">Auditoria: ${sector}</h4>
+                    ${checklistHtml}
+                    <button class="btn" onclick="generateAuditResult('${sector}')">Submeter e Avaliar Inspeção</button>`;
             }, 1200);
         }
-        function finishAuditWizard() {
+
+        function generateAuditResult(sector) {
             document.getElementById('st3').classList.add('active');
+            
             document.getElementById('auditStepContent').innerHTML = `
-                <div style="background:#fff1f2; color:#be123c; padding:20px; border-radius:16px; font-size:14px; margin-bottom:20px; border: 1px solid #fecdd3;">
-                    <strong style="font-size:16px; display:block; margin-bottom:5px;">1 Não Conformidade Encontrada</strong>
-                    Ação sugerida: Abertura automática de ticket de manutenção.
-                </div>
-                <button class="btn" onclick="closeAll(); showToast('Plano de Ação submetido!')">Concluir Auditoria</button>`;
+                <div style="text-align:center; padding:40px 20px;">
+                    <i data-lucide="loader-2" class="animate-spin" size="40" style="margin-bottom:15px; color:var(--vinci-bleu-clair);"></i>
+                    <p style="font-weight:600; color:#555;">Processando dados e evidências...</p>
+                </div>`;
+            lucide.createIcons();
+
+            setTimeout(() => {
+                document.getElementById('auditStepContent').innerHTML = `
+                    <h4 style="margin:0 0 15px 0; color:var(--vinci-bleu-fonce);">Resultado da Auditoria Interna</h4>
+                    
+                    <div style="background:#fff1f2; color:#be123c; padding:20px; border-radius:16px; font-size:14px; margin-bottom:20px; border: 1px solid #fecdd3;">
+                        <strong style="font-size:15px; display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                            <i data-lucide="alert-triangle" size="20"></i> 1 Não Conformidade Encontrada
+                        </strong>
+                        <p style="margin-top:0; margin-bottom:15px; font-size:13px; line-height: 1.4;">Foi detetada uma falha crítica nos processos de conformidade do setor de ${sector}.</p>
+                        
+                        <div class="photo-upload" style="padding:15px; background:white; border-color:#fda4af; margin-bottom:0;" onclick="document.getElementById('ncPhotoInput').click()">
+                            <i data-lucide="camera" size="24" color="#be123c"></i>
+                            <span style="font-size:12px; font-weight:700; color:#be123c;">Adicionar Registo Fotográfico</span>
+                            <input type="file" id="ncPhotoInput" style="display:none;" onchange="showToast('Fotografia anexada ao relatório.')">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" style="background:var(--vinci-violet); border-color:var(--vinci-violet); border-left-color:#a21caf;" onclick="generateActionPlan('${sector}')">
+                        <i data-lucide="sparkles" size="18" style="margin-right:8px;"></i> Criar Plano de Ação (IA)
+                    </button>`;
+                lucide.createIcons();
+            }, 1200);
         }
+
+        function generateActionPlan(sector) {
+            document.getElementById('st4').classList.add('active');
+
+            document.getElementById('auditStepContent').innerHTML = `
+                <div style="text-align:center; padding:40px 20px;">
+                    <i data-lucide="bot" class="animate-pulse" size="40" style="margin-bottom:15px; color:var(--vinci-violet);"></i>
+                    <p style="font-weight:600; color:#555;">A formular plano de contingência estratégico...</p>
+                </div>`;
+            lucide.createIcons();
+
+            setTimeout(() => {
+                document.getElementById('auditStepContent').innerHTML = `
+                    <h4 style="margin:0 0 15px 0; color:var(--vinci-violet); display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <i data-lucide="sparkles" size="20"></i> Plano de Ação & Contingência
+                    </h4>
+                    
+                    <div style="background:white; padding:20px; border-radius:16px; font-size:13px; margin-bottom:20px; border: 1px solid #e2e8f0; box-shadow:var(--shadow-sm);">
+                        
+                        <strong style="color:var(--vinci-bleu-fonce); display:block; margin-bottom:10px; font-size:14px;">Ação Imediata Correta (${sector}):</strong>
+                        <ul style="padding-left:15px; color:#555; margin-top:0; line-height:1.5;">
+                            <li style="margin-bottom:5px;">Isolamento cautelar da área com anomalias operacionais sinalizadas.</li>
+                            <li style="margin-bottom:5px;">Substituição e calibração dos equipamentos referidos num limite de 2h.</li>
+                        </ul>
+                        
+                        <div style="height: 1px; background: #e2e8f0; margin: 15px 0;"></div>
+                        
+                        <strong style="color:var(--vinci-vert); display:block; margin-bottom:10px; font-size:14px;">Medidas de Contingência:</strong>
+                        <ul style="padding-left:15px; color:#555; margin-top:0; margin-bottom:0; line-height:1.5;">
+                            <li style="margin-bottom:5px;">Realocar fluxos prioritários para a sub-área de contingência B.</li>
+                            <li>Notificar gestor de turno e agendar reciclagem preventiva imediata.</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn" onclick="goBack('auditTypeModal'); showToast('Auditoria arquivada com sucesso!')">Concluir Processo</button>`;
+                lucide.createIcons();
+            }, 1800);
+        }
+
+        // Fluxo de Fiscalização Oficial
         function startFiscalizacao() { 
             document.getElementById('auditWizard').style.display = 'none';
             document.getElementById('auditFiscal').style.display = 'block'; 
             document.getElementById('fiscalResult').innerHTML = '';
         }
+
         function simulateUpload() { 
             showToast('IA a processar documento...'); 
             setTimeout(() => { 
@@ -684,13 +1200,6 @@
                     </div>`; 
             }, 1800); 
         }
-        function resetAudit() { 
-            closeAll(); 
-            setTimeout(() => { document.getElementById('st2').classList.remove('active'); document.getElementById('st3').classList.remove('active'); }, 300);
-        }
-
-        /* --- LÓGICA TREINAMENTO --- */
-        function runDiagnosis() { document.getElementById('trainDiagnosis').style.display = 'block'; }
 
         /* --- LÓGICA CHATBOT --- */
         let currentAgent = '';
@@ -707,7 +1216,6 @@
             b.innerHTML += `<div class="msg msg-user">${i.value}</div>`;
             const v = i.value; i.value = '';
             
-            // Scroll to bottom after user message
             b.scrollTop = b.scrollHeight;
 
             setTimeout(() => {
